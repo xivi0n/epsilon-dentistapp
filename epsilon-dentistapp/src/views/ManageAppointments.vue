@@ -1,9 +1,9 @@
 <template>
     <TheHeader/>
-	<div class="home container">
-		<img alt="Vue logo" src="../assets/logo.png">
-		<HelloWorld msg="Home"/>
-	</div>
+    <div class="registration container">
+        <img alt="Vue logo" src="../assets/logo.png">
+        <HelloWorld msg="ManageAppointments"/>
+    </div>
 </template>
 
 <script>
@@ -12,10 +12,14 @@ import HelloWorld from '@/components/HelloWorld.vue'
 import TheHeader from '@/components/TheHeader.vue'
 
 export default {
-  name: 'HomeView',
+  name: 'ManageAppointments',
   components: {
     HelloWorld,
     TheHeader
   }
 }
 </script>
+
+<style scoped>
+    
+</style>
