@@ -13,6 +13,10 @@ export default {
 <style scoped>
     footer {
         text-align: center;
-        margin: 2px auto 0 auto;
+        padding: 10px auto 0 auto;
+        border-top: 2px solid #142d4c;
+    }
+    h4 {
+        margin-top: 15px;
     }
 </style>

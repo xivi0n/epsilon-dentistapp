@@ -29,11 +29,11 @@ export default {
     padding: 0;
   }
   .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 30px auto;
     overflow: auto;
     min-height: 300px;
-    border: 1px solid steelblue;
+    /* border: 1px solid steelblue; */
     padding: 30px;
     border-radius: 5px;
     align-items: center;
@@ -70,5 +70,21 @@ export default {
   .btn-block {
     display: block;
     width: 100%;
+  }
+
+  .bright { 
+    background: #ececec; 
+  }
+    
+  .bright-green { 
+    background: #9fd3c7; 
+  }
+
+  .bright-blue { 
+    background: #385170; 
+  }
+
+  .dark-blue { 
+    background: #142d4c; 
   }
 </style>
