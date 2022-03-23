@@ -2,7 +2,7 @@
   <div class="registration">
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Registration"/>
-    <h1>nesto</h1>
+    <h1>bilo sta</h1>
   </div>
 </template>
 
