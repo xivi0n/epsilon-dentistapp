@@ -44,8 +44,8 @@ export default {
 
     .btn {
         display: inline-block;
-        background: #000;
-        color: #fff;
+        background: #142d4c;
+        color: #ececec;
         border: none;
         padding: 10px 20px;
         margin: 5px;
@@ -54,6 +54,10 @@ export default {
         text-decoration: none;
         font-size: 15px;
         font-family: inherit;
+    }
+
+    .btn:hover {
+        color:#9fd3c7;
     }
 
     .btn:focus {

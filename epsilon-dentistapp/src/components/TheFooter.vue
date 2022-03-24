@@ -16,7 +16,9 @@ export default {
         padding: 10px auto 0 auto;
         border-top: 2px solid #142d4c;
     }
+    
     h4 {
         margin-top: 15px;
+        font-size: 15px;
     }
 </style>
