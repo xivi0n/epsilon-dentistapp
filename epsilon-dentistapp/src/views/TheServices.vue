@@ -1,6 +1,6 @@
 <template>
     <TheHeader/>
-    <div class="registration container">
+    <div class="container">
         <h2>Usluge i cene stomatoloske ordinacije</h2>
         <div :key="service.id" v-for="service in services">
             <TheService :service="service"/>
