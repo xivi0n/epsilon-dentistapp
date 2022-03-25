@@ -34,9 +34,9 @@ export default {
         margin: 5px;
     }
     .btn-confirm {
-        background: green;
+        background: #77dd77;
     }
     .btn-decline {
-        background: red;
+        background: #ff6961;
     }
 </style>
