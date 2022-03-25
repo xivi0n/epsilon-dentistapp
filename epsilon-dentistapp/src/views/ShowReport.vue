@@ -1,6 +1,6 @@
 <template>
     <TheHeader/>
-    <div class="container" align="center">
+    <div class="container bright" align="center">
         <label>Maticni broj</label>
         <input type="number" class="form-control form-control-md"/>
         <div :key="report.id" v-for="report in reports">

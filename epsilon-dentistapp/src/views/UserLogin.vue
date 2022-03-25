@@ -1,6 +1,6 @@
 <template>
     <TheHeader />
-    <div class="container">
+    <div class="container bright">
         <form class="form-size">
             <h2>Prijavi se</h2>
             <div class="form-group">

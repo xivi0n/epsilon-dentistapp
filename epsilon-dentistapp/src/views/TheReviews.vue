@@ -1,6 +1,6 @@
 <template>
     <TheHeader/>
-    <div class="container">
+    <div class="container bright">
         <h2>Iskustva i ocene</h2>
         <div :key="review.id" v-for="review in reviews">
             <TheReview :review="review"/>

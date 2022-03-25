@@ -1,6 +1,6 @@
 <template>
     <TheHeader/>
-    <div class="container">
+    <div class="container bright">
         <h2>Novi zahtevi za stomatologa</h2>
         <div :key="request.id" v-for="request in requests">
             <TheRequest :request="request"/>
