@@ -21,7 +21,7 @@
                         <span style="color:#ececec">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum est nibh, condimentum ac pulvinar ac, ullamcorper id tortor. Nulla a sodales nulla. Morbi in iaculis lorem, non ultrices tellus. Fusce.</span>
                     </li>        
             </ul>
-          <button type="submit" class="btn" style="background:#FDFD96; color:darkgrey;">Prikazi prethodne izvestaje</button>  
+          <button type="submit" class="btn" >Prikazi prethodne izvestaje</button>  
           <button type="submit" class="btn">Izmeni profil</button>  
     </div>
 </template>
