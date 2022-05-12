@@ -1,76 +1,39 @@
 <template>
+    <TheHeader/>
     <router-view/>
-    <!-- <button class="btn">Korisnicka podrska</button> -->
     <TheFooter/>
 </template>
 
 
 <script>
 import TheFooter from '@/components/TheFooter.vue'
+import TheHeader from '@/components/TheHeader.vue'
 
 export default {
     name: 'App',
     components: {
-        TheFooter
+        TheFooter,
+        TheHeader
     }
 }
 </script>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+    /* font-family: 'Open Sans', sans-serif; */
 
     * {
-        box-sizing: border-box;
         margin: 0;
         padding: 0;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    body {
+        background: #E5E5E5;
     }
 
     .container {
-        max-width: 1000px;
-        margin: 30px auto;
-        overflow: auto;
-        min-height: 300px;
-        /* border: 1px solid steelblue; */
-        padding: 30px;
-        border-radius: 5px;
-        align-items: center;
-        text-align: center;
-    }
-
-
-    body {
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .btn {
-        display: inline-block;
-        background: #142d4c;
-        color: #ececec;
-        border: none;
-        padding: 10px 20px;
-        margin: 5px;
-        border-radius: 5px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 15px;
-        font-family: inherit;
-    }
-
-    .btn:hover {
-        color:#9fd3c7;
-    }
-
-    .btn:focus {
-        outline: none;
-    }
-
-    .btn:active {
-        transform: scale(0.98);
-    }
-
-    .btn-block {
-        display: block;
-        width: 100%;
+        margin-bottom: 20px;
+        margin-top: 20px;
     }
 
     .bright { 
