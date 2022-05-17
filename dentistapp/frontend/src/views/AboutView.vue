@@ -26,7 +26,7 @@
 				</div>
 			</div>
 			<div class="col-md-6 col-12">
-				<div class="row content-column">
+				<div class="row">
 					<div class="col-md-8 col-12">
 						<h2>Naša lokacija</h2>
 					</div>
@@ -112,10 +112,6 @@ export default {
 	#map { 
 		min-height: 450px;
 		
-	}
-
-	.nes {
-		align-self: stretch;
 	}
 
 </style>
