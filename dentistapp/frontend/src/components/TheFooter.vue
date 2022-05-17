@@ -1,7 +1,7 @@
 <template>
-    <footer>
-        <h4>Copyright (c) 2022 DentistApp All rights reserved</h4>
-    </footer>
+    <div class="footer my-auto pb-3">
+        <h4> Copyright (c) 2022 DentistApp All rights reserved </h4>
+    </div>
 </template>
 
 <script>
@@ -11,7 +11,10 @@ export default {
 </script>
 
 <style scoped>
-    footer {
+    .footer {
+        position: sticky;
+        top: 100%;
+        width: 100%;
         text-align: center;
         padding: 10px auto 0 auto;
         border-top: 2px solid #142d4c;

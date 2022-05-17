@@ -18,13 +18,24 @@
                     <li class="nav-item">
                         <router-link to="/usluge" class="nav-link router-link px-2">Usluge</router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link to="/korisnicka-podrska" class="nav-link router-link px-2">Korisnička podrška</router-link>
+                    </li>
                 </ul>
                 <div v-if="logged_in != true" class="">
                     <router-link to="/login" class="router-link">
-                        <button type="button" class="btn btn-primary dark-blue">Login</button>
+                        <button type="button" class="btn btn-primary btn-login">Prijavi se</button>
                     </router-link>
                     <router-link to="/registracija" class="router-link">
-                        <button type="button" class="btn btn-primary dark-blue">Registracija</button>
+                        <button type="button" class="btn btn-primary btn-login">Registruj se</button>
+                    </router-link>
+                </div>
+                <div v-if="logged_in == true" class="">
+                    <router-link to="/moj-profil" class="router-link">
+                        <button type="button" class="btn btn-primary">{{displayName}}</button>
+                    </router-link>
+                    <router-link to="/" class="router-link">
+                        <button type="button" class="btn btn-primary btn-login">Odjavi se</button>
                     </router-link>
                 </div>
             </div>
@@ -39,14 +50,21 @@ export default {
     props: {
         logged_in: {
             type: Boolean,
-            default: false
+            default: false,
+        },
+        displayName: {
+            type: String,
+            default: "",
         }
     },
     mounted() {
-        let fa = document.createElement('script')
-        fa.setAttribute('src', 'https://kit.fontawesome.com/69d212019d.js')
-        fa.setAttribute('crossorigin', 'anonymous')
-        document.head.appendChild(fa)
+        if (!document.getElementById('fa')) {
+            let fa = document.createElement('script')
+            fa.setAttribute('src', 'https://kit.fontawesome.com/69d212019d.js')
+            fa.setAttribute('id', 'fa')
+            fa.setAttribute('crossorigin', 'anonymous')
+            document.head.appendChild(fa)
+        }
 
         let links = document.getElementsByClassName("router-link")
         let toggler = document.getElementById("toggler")
@@ -70,6 +88,13 @@ export default {
         margin: 0;
         padding: 0;
     }
+    
+    img {
+        background: #FFFFFF;
+        border: 2px solid #05284B;
+        border-radius: 30px;
+        padding: 0;
+    }
 
     .header-items {
         display: flex;
@@ -86,8 +111,7 @@ export default {
 
     .router-link {
         margin: 0px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 10px;
         color : #05284B;
         font-weight: 600;
         text-decoration: none;
@@ -96,10 +120,19 @@ export default {
     }
 
     .btn-primary, .btn:focus, .btn:active {
-        background: #05284B;
         outline: none;
         box-shadow: none;
         border: none;
+        background: #05284B;
+        border-radius: 30px;
+    }
+
+    .btn-login {
+        background: #FFFFFF;
+        border: 2px solid #05284B;
+        border-radius: 30px;
+        color: #05284B;
+        font-weight: 600    ;
     }
 
 </style>

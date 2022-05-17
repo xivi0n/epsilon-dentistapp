@@ -1,9 +1,11 @@
 <template>
-    <div class="row">
-        <div class="col-10 cell">
+    <div class="col-lg-11 col-12 p-1">
+        <div class="col-12 p-2 cell">
             {{service.name}}
         </div>
-        <div class="col-1 cell-price">
+    </div>
+    <div class="col-lg-1 col-3 p-1">
+            <div class="col-12 p-2 cell price">
             {{service.price}}
         </div>
     </div>
@@ -20,11 +22,13 @@ export default {
 
 <style scoped>
     .cell {
-        background: #9fd3c7;
-        margin: 5px;
+        box-shadow: -4px 4px 25px rgba(0, 0, 0, 0.25);
+		border-radius: 10px;
+        text-align: center;
     }
-    .cell-price {
-        background: #9fd3c7;
-        margin: 5px;
+
+    .price {
+        background-color: #05284B;
+        color: white;
     }
 </style>
