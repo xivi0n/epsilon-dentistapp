@@ -31,6 +31,7 @@ class CustomAccountManager(BaseUserManager):
 
 
 class Korisnik(AbstractBaseUser, PermissionsMixin):
+
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default = False)
     is_admin = models.BooleanField(default=False)
@@ -52,6 +53,10 @@ class Korisnik(AbstractBaseUser, PermissionsMixin):
 
 
 class Informacije(models.Model):
+    @classmethod
+    def create(cls, idK, ime, prezime, matbroj, slika, tipK):
+        return cls(idK = idK, ime = ime, prezime = prezime, matbroj = matbroj, slika = slika, tipK= tipK)
+
     idK = models.OneToOneField(Korisnik, on_delete = models.CASCADE, primary_key = True)
     ime = models.CharField(max_length=30)
     prezime = models.CharField(max_length= 30)
@@ -60,6 +65,9 @@ class Informacije(models.Model):
     tipK = models.CharField(max_length=20, default='pacijent')
 
 class Ocene(models.Model):
+    @classmethod
+    def create(cls, idK, idO, ocena, opis):
+        return cls(idK=idK, idO=idO, ocena = ocena, opis = opis)
     idK = models.ForeignKey(Korisnik, on_delete = models.CASCADE)
     idO = models.AutoField(primary_key = True)
     ocena = models.IntegerField(
@@ -73,11 +81,20 @@ class Ocene(models.Model):
 
 
 class Usluge(models.Model):
-    idU = models.AutoField(primary_key = True)
-    cena = models.DecimalField(max_digits = 10, decimal_places=2)
+    @classmethod
+    def create(cls, idU, cena, opis):
+        return cls(idU=idU, cena=cena, opis=opis)
+
+    idU = models.AutoField(primary_key=True)
+    cena = models.DecimalField(max_digits=10, decimal_places=2)
     opis = models.CharField(max_length=255)
 
+
 class Izvestaj(models.Model):
+    @classmethod
+    def create(cls, idI, idK, idS, vrsta, dijagnoza):
+        return cls(idI=idI, idK=idK, idS=idS, vrsta=vrsta, dijagnoza=dijagnoza)
+
     idI = models.AutoField(primary_key = True)
     idK = models.ForeignKey(Korisnik, related_name = 'pacijent_izvestaj', on_delete = models.CASCADE)
     idS = models.ForeignKey(Korisnik, related_name = 'stomatolog_izvestaj', on_delete = models.CASCADE)
@@ -85,21 +102,34 @@ class Izvestaj(models.Model):
     dijagnoza = models.TextField(max_length=1000)
 
 class Lekovi(models.Model):
+    @classmethod
+    def create(cls, idL, opis):
+        return cls(idL=idL, opis=opis)
+
     idL = models.AutoField(primary_key = True)
     opis = models.CharField(max_length=255)
 
 class Terapija(models.Model):
+    @classmethod
+    def create(cls, idI, idL, kolicina):
+        return cls(idI = idI, idL=idL, kolicina=kolicina)
     idI = models.OneToOneField(Izvestaj, on_delete=models.CASCADE) #ovo mozda nije dobro
     idL = models.ForeignKey(Lekovi, on_delete = models.CASCADE)
     kolicina = models.CharField(max_length=100)
 
 class Pitanja(models.Model):
+    @classmethod
+    def create(cls, idP, idK, naslov, opis):
+        return cls(idP=idP, idK=idK, naslov=naslov, opis=opis)
     idP = models.AutoField(primary_key = True)
     idK = models.ForeignKey(Korisnik, on_delete = models.CASCADE)
     naslov = models.CharField(max_length=100)
     opis = models.TextField(max_length= 255)
 
 class Pregledi(models.Model):
+    @classmethod
+    def create(cls, idP, idK, idS, opis, dv, trajanje):
+        return cls(idP=idP, idK=idK, idS=idS, opis = opis, dv = dv, trajanje = trajanje)
     idP = models.AutoField(primary_key = True)
     idK = models.ForeignKey(Korisnik, related_name = 'pacijent_pregled', on_delete = models.CASCADE)
     idS = models.ForeignKey(Korisnik, related_name = 'stomatolog_pregled', on_delete = models.CASCADE)
@@ -108,6 +138,7 @@ class Pregledi(models.Model):
     trajanje = models.IntegerField(default=0) #mozda bolje integer
 
 class Zahpre(models.Model):
+
     idZ = models.AutoField(primary_key = True)
     idK = models.ForeignKey(Korisnik, related_name='pacijent_zahtev', on_delete = models.CASCADE)
     idS = models.ForeignKey(Korisnik, related_name = 'stomatolog_zahtev', on_delete = models.CASCADE)
