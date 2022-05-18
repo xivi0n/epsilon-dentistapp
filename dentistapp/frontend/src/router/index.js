@@ -79,6 +79,11 @@ const routes = [
     path: '/uredi-ordinaciju',
     name: 'ManageOffice',
     component: () => import(/* webpackChunkName: "about" */ '../views/ManageOffice.vue')
+  },
+  {
+    path: '/moji-izvestaji',
+    name: 'MyAllReports',
+    component: () => import(/* webpackChunkName: "about" */ '../views/MyAllReports.vue')
   }
 ]
 

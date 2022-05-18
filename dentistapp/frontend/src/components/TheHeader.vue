@@ -31,12 +31,14 @@
                     </router-link>
                 </div>
                 <div v-if="logged_in == true" class="">
-                    <router-link to="/moj-profil" class="router-link">
-                        <button type="button" class="btn btn-primary">{{displayName}}</button>
-                    </router-link>
-                    <router-link to="/" class="router-link">
-                        <button type="button" class="btn btn-primary btn-login">Odjavi se</button>
-                    </router-link>
+                    <div class="dropdown">
+                        <a class="btn btn-primary" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{displayName}} <i class="fa-solid fa-caret-down"></i></a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><router-link to="/moj-profil" class="dropdown-item closenav">Moj profil</router-link></li>
+                            <li><router-link to="/moji-izvestaji" class="dropdown-item closenav">Moji izveštaji</router-link></li>
+                            <li><router-link to="/" class="dropdown-item closenav">Odjavi se</router-link></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,10 +68,18 @@ export default {
             document.head.appendChild(fa)
         }
 
-        let links = document.getElementsByClassName("router-link")
+        let linksRouter = document.getElementsByClassName("router-link")
+        let linksDrop = document.getElementsByClassName("closenav")
+        // console.log(links)
+        // links += document.getElementsByClassName("dropdown-item")
         let toggler = document.getElementById("toggler")
-        console.log(links)
-        for (const link of links) {
+        for (const link of linksRouter) {
+            link.onclick = function() {
+                if (toggler.getAttribute("aria-expanded") == "true")
+                    toggler.click()
+            }
+        }
+        for (const link of linksDrop) {
             link.onclick = function() {
                 if (toggler.getAttribute("aria-expanded") == "true")
                     toggler.click()
@@ -91,8 +101,8 @@ export default {
     
     img {
         background: #FFFFFF;
-        border: 2px solid #05284B;
-        border-radius: 30px;
+        /* border: 2px solid #05284B; */
+        /* border-radius: 30px; */
         padding: 0;
     }
 
@@ -135,4 +145,10 @@ export default {
         font-weight: 600    ;
     }
 
+    .dropdown-item {
+        color: #05284B;
+        font-weight: 600;
+        font-size: 15px;
+        text-align: right;
+    }
 </style>

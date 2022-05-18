@@ -1,7 +1,9 @@
 <template>
-    <TheHeader/>
-    <router-view/>
-    <TheFooter/>
+    <div id="page-wrapper">
+        <TheHeader :logged_in=logged_in :displayName=displayName />
+        <router-view/>
+        <TheFooter/>
+    </div>  
 </template>
 
 
@@ -14,6 +16,16 @@ export default {
     components: {
         TheFooter,
         TheHeader
+    },
+    data() {
+        return {
+            logged_in: false,
+            displayName: ""
+        }
+    },
+    created() {
+        this.logged_in = true
+        this.displayName = "Mihailo Jovanovic"
     }
 }
 </script>
@@ -22,9 +34,14 @@ export default {
     /* font-family: 'Open Sans', sans-serif; */
 
     * {
-        margin: 0;
-        padding: 0;
+        /* margin: 0;
+        padding: 0; */
         font-family: 'Open Sans', sans-serif;
+    }
+
+    #page-wrapper {
+        position: relative;
+        min-height: 100vh;
     }
 
     body {
@@ -32,8 +49,8 @@ export default {
     }
 
     .container {
-        margin-bottom: 20px;
-        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
     }
 
     .bright { 

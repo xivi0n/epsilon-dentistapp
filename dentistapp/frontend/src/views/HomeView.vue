@@ -2,8 +2,8 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-12">
-				<img alt="Vue logo" src="../assets/logo.png" />
 				<HelloWorld msg="Home" />
+				<img alt="Vue logo" src="../assets/logo.svg" />
 			</div>
 		</div>
 	</div>
