@@ -1,12 +1,12 @@
 <template>
     <div class="col-lg-11 col-12 p-1">
         <div class="col-12 p-2 cell">
-            {{service.name}}
+            {{service.opis}}
         </div>
     </div>
     <div class="col-lg-1 col-3 p-1">
             <div class="col-12 p-2 cell price">
-            {{service.price}}
+            {{service.cena}}
         </div>
     </div>
 </template>

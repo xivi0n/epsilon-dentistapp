@@ -1,8 +1,9 @@
 <template>
-    <TheHeader/>
-    <div class="container bright">
-        <h2>Usluge i cene stomatoloske ordinacije</h2>
-        <div :key="service.id" v-for="service in services">
+    <div class="container">
+        <div class="row">
+            <h2>Usluge i cene stomatoloske ordinacije</h2>
+        </div>
+        <div class="row service-row" :key="service.idU" v-for="service in services">
             <TheService :service="service"/>
         </div>
     </div>
@@ -10,13 +11,12 @@
 
 <script>
 // @ is an alias to /src
-import TheHeader from '@/components/TheHeader.vue'
 import TheService from '@/components/TheService.vue'
+import axios from 'axios'
 
 export default {
     name: 'TheServices',
     components: {
-        TheHeader,
         TheService
     },
     data() {
@@ -24,33 +24,58 @@ export default {
             services: []
         }
     },
-    created() {
-        this.services = [
-            {
-                id: 1,
-                name: "Usluga stomatoloske ordinacije 1",
-                price: 1234
-            },
-            {
-                id: 2,
-                name: "Usluga stomatoloske ordinacije 2",
-                price: 1234
-            },
-            {
-                id: 3,
-                name: "Usluga stomatoloske ordinacije 3",
-                price: 1234
-            },
-            {
-                id: 4,
-                name: "Usluga stomatoloske ordinacije 4",
-                price: 1234
-            }
-        ]
+    mounted() {
+        // this.services = [
+        //     {
+        //         idU: 1,
+        //         opis: "Usluga stomatoloske ordinacije 1",
+        //         cena: 1234
+        //     },
+        //     {
+        //         idU: 2,
+        //         opis: "Usluga stomatoloske ordinacije 2",
+        //         cena: 1234
+        //     },
+        //     {
+        //         idU: 3,
+        //         opis: "Usluga stomatoloske ordinacije 3",
+        //         cena: 1234
+        //     },
+        //     {
+        //         idU: 4,
+        //         opis: "Usluga stomatoloske ordinacije 4",
+        //         cena: 1234
+        //     }
+        // ]
+        this.getServices()
+    },
+    methods: {
+        getServices() {
+            axios.get('http://localhost:8000/api/v1/sve-usluge')
+            .then(response => {
+                this.services = response.data
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
     }
 }
 </script>
 
 <style scoped>
-    
+    .service-row {
+        width: 80%;
+        display: flex;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+		font-weight: 700;
+		font-size: 40px;
+        color: #05284B;
+    }
+
 </style>
