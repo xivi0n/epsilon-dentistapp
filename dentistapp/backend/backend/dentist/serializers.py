@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from .models import *
 
@@ -12,11 +13,11 @@ class UslugeSerializer(serializers.ModelSerializer):
         ]
 
 
-class KorisnikSerializer(serializers.ModelSerializer):
+class RegistracijaSerializer(serializers.ModelSerializer):
 
     ime = serializers.CharField()
     prezime = serializers.CharField()
-    matbroj = serializers.CharField()
+    matbroj = serializers.CharField(validators=[UniqueValidator(queryset=Informacije.objects.all())])
     tipK = serializers.CharField()
 
     class Meta:
@@ -49,6 +50,7 @@ class KorisnikSerializer(serializers.ModelSerializer):
         )
         informacije.save()
         return korisnik
+
 
 
 

@@ -3,7 +3,10 @@ import datetime
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 from django.core.validators import  MaxValueValidator, MinValueValidator, MinLengthValidator
-
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 # Create your models here.
 
 class CustomAccountManager(BaseUserManager):
@@ -39,6 +42,7 @@ class Korisnik(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     objects = CustomAccountManager()
 
     def __str__(self):
@@ -61,7 +65,7 @@ class Informacije(models.Model):
     idK = models.OneToOneField(Korisnik, on_delete = models.CASCADE, primary_key = True)
     ime = models.CharField(max_length=30)
     prezime = models.CharField(max_length= 30)
-    matbroj = models.CharField(max_length= 13, validators=[MinLengthValidator(13)])
+    matbroj = models.CharField(max_length= 13, validators=[MinLengthValidator(13)], unique=True)
     slika = models.ImageField(upload_to='imgs/', null=True, blank=True) #dodao
     tipK = models.CharField(max_length=20, default='pacijent')
 
@@ -159,3 +163,7 @@ class Zahpre(models.Model):
     dvdo = models.DateTimeField(default = datetime.datetime.now())
 
 
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
