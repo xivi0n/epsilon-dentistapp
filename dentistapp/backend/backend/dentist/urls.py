@@ -4,4 +4,5 @@ from .views import *
 
 urlpatterns = [
     path('sve-usluge/', SveUsluge.as_view()),
+    path('registracija/', registracija, name = 'registracija'),
 ]
