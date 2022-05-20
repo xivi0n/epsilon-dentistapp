@@ -22,7 +22,7 @@
                         <router-link to="/korisnicka-podrska" class="nav-link router-link px-2">Korisnička podrška</router-link>
                     </li>
                 </ul>
-                <div v-if="logged_in != true" class="">
+                <div v-if="user.logged_in != true" class="">
                     <router-link to="/login" class="router-link">
                         <button type="button" class="btn btn-primary btn-login">Prijavi se</button>
                     </router-link>
@@ -30,9 +30,9 @@
                         <button type="button" class="btn btn-primary btn-login">Registruj se</button>
                     </router-link>
                 </div>
-                <div v-if="logged_in == true" class="">
+                <div v-if="user.logged_in == true" class="">
                     <div class="dropdown">
-                        <a class="btn btn-primary" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{displayName}} <i class="fa-solid fa-caret-down"></i></a>
+                        <a class="btn btn-primary" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{user.displayName}} <i class="fa-solid fa-caret-down"></i></a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <li><router-link to="/moj-profil" class="dropdown-item closenav">Moj profil</router-link></li>
                             <li><router-link to="/moji-izvestaji" class="dropdown-item closenav">Moji izveštaji</router-link></li>
@@ -50,13 +50,21 @@
 export default {
     name: 'TheHeader',
     props: {
-        logged_in: {
-            type: Boolean,
-            default: false,
-        },
-        displayName: {
-            type: String,
-            default: "",
+        // logged_in: {
+        //     type: Boolean,
+        //     default: false,
+        // },
+        // displayName: {
+        //     type: String,
+        //     default: "",
+        // }
+    },
+    data() {
+        return {
+            user: {
+                logged_in: (localStorage.getItem("logged_in") === 'true'),
+                displayName: localStorage.getItem("displayName")
+            }
         }
     },
     mounted() {
@@ -70,8 +78,6 @@ export default {
 
         let linksRouter = document.getElementsByClassName("router-link")
         let linksDrop = document.getElementsByClassName("closenav")
-        // console.log(links)
-        // links += document.getElementsByClassName("dropdown-item")
         let toggler = document.getElementById("toggler")
         for (const link of linksRouter) {
             link.onclick = function() {
@@ -85,6 +91,9 @@ export default {
                     toggler.click()
             }
         }
+        this.emitter.on("login-changed", user => {
+            this.user = user;
+        });
     },
     methods: {
     }
@@ -150,5 +159,9 @@ export default {
         font-weight: 600;
         font-size: 15px;
         text-align: right;
+    }
+
+    #dropdownMenuLink {
+        min-width: 160px;
     }
 </style>

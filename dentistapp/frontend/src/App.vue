@@ -1,6 +1,6 @@
 <template>
     <div id="page-wrapper">
-        <TheHeader :logged_in=logged_in :displayName=displayName />
+        <TheHeader/>
         <router-view/>
         <TheFooter/>
     </div>  
@@ -19,13 +19,15 @@ export default {
     },
     data() {
         return {
-            logged_in: false,
-            displayName: ""
         }
     },
-    created() {
-        this.logged_in = true
-        this.displayName = "Mihailo Jovanovic"
+    mounted() {
+        if (localStorage.getItem("token") === null)
+            localStorage.setItem("token", "")
+        if (localStorage.getItem("displayName") === null)
+            localStorage.setItem("displayName", "")
+        if (localStorage.getItem("logged_in") === null)
+            localStorage.setItem("logged_in", false)
     }
 }
 </script>

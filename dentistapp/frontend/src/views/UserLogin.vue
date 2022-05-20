@@ -6,16 +6,16 @@
                     <h2>Prijavi se</h2>
                     <div class="form-group">
                         <label>Email adresa</label>
-                        <input type="email" class="form-control form-control-md cell" placeholder="email@something.com"/>
+                        <input type="email" id="username" class="form-control form-control-md cell" placeholder="email@something.com"/>
                     </div>
                     <div class="form-group">
                         <label>Lozinka</label>
-                        <input type="password" class="form-control form-control-md cell" placeholder="********"/>
+                        <input type="password" id="password" class="form-control form-control-md cell" placeholder="********"/>
                     </div>
                     <p class="mt-2 mb-4">
                         <router-link to="/" class="forgot-password">Zaboravljena lozinka ?</router-link>
                     </p>
-                    <button type="submit" class="btn btn-primary w-100">Prijavi se</button>
+                    <button type="button" v-on:click="login()" class="btn btn-primary w-100">Prijavi se</button>
                 </form>
             </div>
         </div>
@@ -24,11 +24,52 @@
 
 <script>
 // @ is an alias to /src
+import axios from 'axios'
 
 export default {
     name: "UserLogin",
     components: {
     },
+    methods: {
+        login() {
+            axios.post("http://localhost:8000/api/v1/login/",
+            {
+                "username": document.getElementById("username").value,
+                "password": document.getElementById("password").value
+            })
+            .then(response => {
+                axios.get("http://localhost:8000/api/v1/moj-profil/",{
+                headers: {
+                    'Authorization': 'Token ' + response.data.token
+                }}).then(response => {
+                    let user = {
+                        logged_in: true,
+                        displayName: ""
+                    }
+                    user.displayName = response.data["ime"] + " " + response.data["prezime"]
+
+                    localStorage.setItem("displayName", user.displayName)
+                    localStorage.setItem("logged_in", user.logged_in)
+
+                    this.emitter.emit("login-changed", user)
+                    this.$router.push({ path: '/moj-profil' })
+                }).catch(error => {
+                    console.log(error)
+                })
+                localStorage.setItem("token", response.data.token)
+            }).catch(error => {
+                console.log(error)
+                localStorage.setItem("token", "")
+                localStorage.setItem("displayName", "")
+                localStorage.setItem("logged_in", false)
+
+                this.emitter.emit('login-changed', {
+                    logged_in: false,
+                    displayName: ""
+                });
+            })
+        },  
+    }
 };
 </script>
 
