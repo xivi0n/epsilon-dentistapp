@@ -52,5 +52,26 @@ class RegistracijaSerializer(serializers.ModelSerializer):
         return korisnik
 
 
+class MojProfilPregledSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Korisnik
+        fields = ['id', 'email']
+
+
+class MojProfilUpdateSerializer(serializers.ModelSerializer):
+
+    ime = serializers.CharField()
+    prezime = serializers.CharField()
+    matbroj = serializers.CharField(validators=[UniqueValidator(queryset=Informacije.objects.all())])
+
+    class Meta:
+        model = Korisnik
+        fields = ['email', 'ime', 'prezime', 'matbroj']
+
+class MojiIzvestajiSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Izvestaj
+        fields = ['idI', 'datum', 'vrsta']
 

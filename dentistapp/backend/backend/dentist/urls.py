@@ -6,4 +6,6 @@ urlpatterns = [
     path('sve-usluge/', SveUsluge.as_view()),
     path('registracija/', registracija, name = 'registracija'),
     path('login/', obtain_auth_token, name = "login"),
+    path('moj-profil/', mojProfilView, name = 'mojProfil'),
+    path('moji-izvestaji/', MojiIzvestaji.as_view(), name = 'mojiIzvestaji')
 ]

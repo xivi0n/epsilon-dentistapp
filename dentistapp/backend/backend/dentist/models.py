@@ -109,6 +109,7 @@ class Izvestaj(models.Model):
     idS = models.ForeignKey(Korisnik, related_name = 'stomatolog_izvestaj', on_delete = models.CASCADE)
     vrsta = models.CharField(max_length=50)
     dijagnoza = models.TextField(max_length=1000)
+    datum = models.DateTimeField(default = datetime.datetime.now())
 
 class Lekovi(models.Model):
 
