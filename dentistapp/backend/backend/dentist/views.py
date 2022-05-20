@@ -76,8 +76,13 @@ class MojiIzvestaji(APIView):
     permission_classes = (IsAuthenticated,)
     def get(self, request, format=None):
         korisnik = request.user
-        izvestaji = Izvestaj.objects.filter(idK=korisnik)
-        serializer = MojiIzvestajiSerializer(izvestaji, many=True)
+        informacije = Informacije.objects.get(idK=korisnik)
+        if informacije.tipK == 'pacijent':
+            izvestaji = Izvestaj.objects.filter(idK=korisnik)
+            serializer = MojiIzvestajiSerializer(izvestaji, many=True)
+        else:
+            izvestaji = Izvestaj.objects.filter(idS=korisnik)
+            serializer = MojiIzvestajiSerializer(izvestaji, many = True)
         return Response(serializer.data)
 
 
