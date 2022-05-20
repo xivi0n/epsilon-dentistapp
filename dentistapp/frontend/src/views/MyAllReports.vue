@@ -9,12 +9,12 @@
                     <div class="row mx-2" :key="report.id" v-for="report in reports">
                         <div class="col-lg-9 col-md-8 col-12 p-1">
                             <div class="p-2 cell">
-                                {{report.title}}
+                                {{report.vrsta}}
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 col-4 p-1">
                             <div class="p-2 cell text-center">
-                                {{report.date}}
+                                {{report.datum}}
                             </div>
                         </div>
                         <div class="col-lg-1 col-md-2 col-12 p-1">
@@ -31,6 +31,7 @@
 
 <script>
 // @ is an alias to /src
+import axios from 'axios'
 
 export default {
 	name: "MyAllReports",
@@ -42,38 +43,52 @@ export default {
         }
     },
     mounted() {
-        this.reports = [
-                        {
-                id: 1,
-                title: "Naslov izvestaja",
-                date: "12.1.2022."
-            },
-            {
-                id: 2,
-                title: "Naslov izvestaja",
-                date: "12.1.2022."
-            },
-            {
-                id: 3,
-                title: "Naslov izvestaja",
-                date: "12.1.2022."
-            },
-            {
-                id: 4,
-                title: "Naslov izvestaja",
-                date: "12.1.2022."
-            },
-            {
-                id: 5,
-                title: "Naslov izvestaja",
-                date: "12.1.2022."
-            },
-            {
-                id: 6,
-                title: "Naslov izvestaja",
-                date: "12.1.2022."
-            }
-        ]
+        axios.get("http://localhost:8000/api/v1/moji-izvestaji/", {
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem("token")
+        }}).then(response => {
+            this.reports = response.data
+            this.reports.forEach(e => {
+                e.datum = new Date(e.datum).toISOString().slice(0,10);
+            });
+            console.log(response.data)
+        }).catch(error => {
+            console.log(error)
+            this.$router.push({ path: '/' })
+        })
+
+        // this.reports = [
+        //                 {
+        //         id: 1,
+        //         title: "Naslov izvestaja",
+        //         date: "12.1.2022."
+        //     },
+        //     {
+        //         id: 2,
+        //         title: "Naslov izvestaja",
+        //         date: "12.1.2022."
+        //     },
+        //     {
+        //         id: 3,
+        //         title: "Naslov izvestaja",
+        //         date: "12.1.2022."
+        //     },
+        //     {
+        //         id: 4,
+        //         title: "Naslov izvestaja",
+        //         date: "12.1.2022."
+        //     },
+        //     {
+        //         id: 5,
+        //         title: "Naslov izvestaja",
+        //         date: "12.1.2022."
+        //     },
+        //     {
+        //         id: 6,
+        //         title: "Naslov izvestaja",
+        //         date: "12.1.2022."
+        //     }
+        // ]
     }
 };
 </script>

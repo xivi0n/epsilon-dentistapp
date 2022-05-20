@@ -13,7 +13,7 @@
                     <hr class="">
                     <input readonly type="email" class="form-control-plaintext" :placeholder="user.email"/>
                     <hr class="">
-                    <input readonly type="text" class="form-control-plaintext pb-2" :placeholder="user.jmbg"/>
+                    <input readonly type="text" class="form-control-plaintext pb-2" :placeholder="user.matbroj"/>
                 </div>
                 <button class="btn btn-primary w-100 my-3">Izmeni podatke</button>
             </div>
@@ -46,6 +46,7 @@
 </template>
 <script>
 // @ is an alias to /src
+import axios from 'axios'
 
 export default {
     name: 'AboutView',
@@ -53,17 +54,23 @@ export default {
     },
     data() {
         return {
-            user: {},
+            user: {
+                logged_in: false,
+                displayName: ""
+            },
             appointments: [],
         }
     },
     mounted() {
-        this.user = {
-            ime: "Mihailo",
-            prezime: "Jovanovic",
-            email: "something@email.com",
-            jmbg: 1101001111011
-        }
+        axios.get("http://localhost:8000/api/v1/moj-profil/", {
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem("token")
+        }}).then(response => {
+            this.user = response.data
+        }).catch(error => {
+            console.log(error)
+            this.$router.push({ path: '/' })
+        })
 
         this.appointments = [
             {

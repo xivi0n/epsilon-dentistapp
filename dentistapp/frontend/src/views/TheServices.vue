@@ -25,6 +25,7 @@ export default {
         }
     },
     mounted() {
+        this.getServices()
         // this.services = [
         //     {
         //         idU: 1,
@@ -47,13 +48,15 @@ export default {
         //         cena: 1234
         //     }
         // ]
-        this.getServices()
     },
     methods: {
         getServices() {
             axios.get('http://localhost:8000/api/v1/sve-usluge')
             .then(response => {
                 this.services = response.data
+                this.services.forEach(e => {
+                    e.cena = Math.trunc(e.cena)
+                })
             })
             .catch(error => {
                 console.log(error)

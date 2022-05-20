@@ -2,37 +2,37 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <form class="form-size" action="http://192.168.100.6:8000/registracija" method="post" id="reg-form">
+                <form class="form-size" id="reg-form">
                     <h2>Registruj se</h2>
                     <div class="row">
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label>Ime</label>
-                                <input type="firstname" class="form-control form-control-md cell" placeholder="Ivan"/>
+                                <input id="ime" type="firstname" name="ime" class="form-control form-control-md cell" placeholder="Ivan"/>
                             </div>
                         </div>
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label>Prezime</label>
-                                <input type="lastname" class="form-control form-control-md cell" placeholder="Ivanovic"/>
+                                <input id="prezime" type="lastname" name="prezime" class="form-control form-control-md cell" placeholder="Ivanovic"/>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Email adresa</label>
-                        <input type="email" class="form-control form-control-md cell" placeholder="email@something.com"/>
+                        <input id="email" type="email" name="email" class="form-control form-control-md cell" placeholder="email@something.com"/>
                     </div>
 
                     <div class="form-group">
                         <label>JMBG</label>
-                        <input type="text" pattern="^\s*?\d{13}(?:[-\s]\d{13})?\s*?$" class="form-control form-control-md cell" placeholder="1101001000011"/>
+                        <input id="matbroj" type="text" name="matbroj" pattern="^\s*?\d{13}(?:[-\s]\d{13})?\s*?$" class="form-control form-control-md cell" placeholder="1101001000011"/>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 col-12">
                             <div class="form-group">
                                 <label>Lozinka</label>
-                                <input type="password" class="form-control form-control-md cell" placeholder="********"/>
+                                <input id="password" type="password" name="password" class="form-control form-control-md cell" placeholder="********"/>
                             </div>
                         </div>
                         <div class="col-md-6 col-12">
@@ -45,12 +45,12 @@
 
                     <div class="form-group">
                         <label>Tip naloga</label>
-                        <select class="form-select mb-3 cell" aria-label="Default select example">
-                            <option value="Pacijent" selected>Pacijent</option>
-                            <option value="Stomatolog">Stomatolog</option>
+                        <select id="tipK" class="form-select mb-3 cell" aria-label="Default select example">
+                            <option value="pacijent" selected>Pacijent</option>
+                            <option value="stomatolog">Stomatolog</option>
                         </select>
                     </div>
-                    <button type="submit" form="reg-form" value="Submit" class="btn btn-primary w-100 mb-3">Registruj se</button>
+                    <button v-on:click="register()" type="button" class="btn btn-primary w-100 mb-3">Registruj se</button>
                 </form>
             </div>
         </div>
@@ -59,12 +59,37 @@
 
 <script>
 // @ is an alias to /src
+import axios from 'axios'
 
 export default {
     name: 'RegistrationView',
     components: {
     },
     mounted() {
+    },
+    methods: {
+        register() {
+            let e = document.getElementById("tipK");
+            let ime = document.getElementById("ime").value
+            let prezime = document.getElementById("prezime").value
+            let email = document.getElementById("email").value
+            axios.post("http://localhost:8000/api/v1/registracija/",
+            {
+                "ime": ime,
+                "prezime": prezime,
+                "email": email,
+                "matbroj": document.getElementById("matbroj").value,
+                "password": document.getElementById("password").value,
+                "tipK": e.options[e.selectedIndex].value
+            })
+            .then(response => {
+                console.log(response);
+                if (response.data["email"][0] == "korisnik with this email already exists.")
+                    alert("Postoji korisnik sa zadatom email adresom")
+                else
+                    this.$router.push({ path: '/' })
+            })
+        }
     }
 }
 </script>
