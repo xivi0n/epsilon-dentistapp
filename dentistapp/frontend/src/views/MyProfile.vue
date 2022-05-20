@@ -69,7 +69,7 @@ export default {
             this.user = response.data
         }).catch(error => {
             console.log(error)
-            this.$router.push({ path: '/' })
+            this.$router.push({ path: '/404' })
         })
 
         this.appointments = [
