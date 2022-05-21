@@ -1,5 +1,4 @@
 <template>
-    <TheHeader/>
     <div class="container bright">
         <form class="form-size">    
             <h2>Zakazivanje pregleda</h2>  
@@ -46,12 +45,10 @@
 
 <script>
 // @ is an alias to /src
-import TheHeader from '@/components/TheHeader.vue'
 
 export default {
   name: 'NewAppointment',
   components: {
-    TheHeader
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="row">
+        <div class="row text-center">
             <h2>Usluge i cene stomatoloske ordinacije</h2>
         </div>
         <div class="row service-row" :key="service.idU" v-for="service in services">
@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         getServices() {
-            axios.get('http://localhost:8000/api/v1/sve-usluge')
+            axios.get('http://localhost:8000/api/v1/sve-usluge/')
             .then(response => {
                 this.services = response.data
                 this.services.forEach(e => {

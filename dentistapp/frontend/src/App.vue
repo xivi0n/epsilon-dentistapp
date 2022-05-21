@@ -28,6 +28,8 @@ export default {
             localStorage.setItem("displayName", "")
         if (localStorage.getItem("logged_in") === null)
             localStorage.setItem("logged_in", false)
+        if (localStorage.getItem("tipK") === null)
+            localStorage.setItem("tipK", "")
     }
 }
 </script>

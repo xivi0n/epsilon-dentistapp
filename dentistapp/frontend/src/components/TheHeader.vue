@@ -21,6 +21,9 @@
                     <li class="nav-item">
                         <router-link to="/korisnicka-podrska" class="nav-link router-link px-2">Korisnička podrška</router-link>
                     </li>
+                    <li class="nav-item" v-if="user.logged_in == true">
+                        <router-link to="/zakazi-pregled" class="nav-link router-link px-2">Zakaži pregled</router-link>
+                    </li>
                 </ul>
                 <div v-if="user.logged_in != true" class="">
                     <router-link to="/login" class="router-link">
@@ -36,7 +39,8 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <li><router-link to="/moj-profil" class="dropdown-item closenav">Moj profil</router-link></li>
                             <li><router-link to="/moji-izvestaji" class="dropdown-item closenav">Moji izveštaji</router-link></li>
-                            <li><router-link to="/" class="dropdown-item closenav">Odjavi se</router-link></li>
+                            <li><router-link to="/moji-zahtevi" class="dropdown-item closenav">Moji zahtevi</router-link></li>
+                            <li><router-link v-on:click="odjavi()" to="/" class="dropdown-item closenav">Odjavi se</router-link></li>
                         </ul>
                     </div>
                 </div>
@@ -47,6 +51,8 @@
 
 
 <script>
+import axios from 'axios'
+
 export default {
     name: 'TheHeader',
     props: {
@@ -96,6 +102,26 @@ export default {
         });
     },
     methods: {
+        odjavi() {
+            this.user = {
+                logged_in: false,
+                displayName: ""
+            }
+            axios.get("http://localhost:8000/api/v1/logout/", {
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token")
+            }}).then(response => {
+                localStorage.setItem("token", "")
+                localStorage.setItem("displayName", "")
+                localStorage.setItem("logged_in", false)
+                console.log(response)
+            }).catch(error => {
+                console.log(error)
+                this.$router.push({ path: '/404' })
+            })
+
+            
+        }
     }
 }
 </script>
@@ -164,4 +190,5 @@ export default {
     #dropdownMenuLink {
         min-width: 160px;
     }
+
 </style>

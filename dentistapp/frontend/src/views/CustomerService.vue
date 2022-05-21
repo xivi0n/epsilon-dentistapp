@@ -22,7 +22,7 @@
                     </div>
                     <div class="form-group">
                         <label>Opis problema</label>
-                        <textarea class="form-control cell" id="exampleFormControlTextarea1" rows="4" placeholder="..."></textarea>
+                        <textarea class="form-control cell" id="exampleFormControlTextarea1" rows="4" placeholder="Opišite problem ..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 my-3">Pošalji upit</button>
                 </form>

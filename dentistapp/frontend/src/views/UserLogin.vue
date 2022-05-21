@@ -50,6 +50,7 @@ export default {
 
                     localStorage.setItem("displayName", user.displayName)
                     localStorage.setItem("logged_in", user.logged_in)
+                    localStorage.setItem("tipK", response.data.tipK)
 
                     this.emitter.emit("login-changed", user)
                     this.$router.push({ path: '/moj-profil' })
