@@ -8,5 +8,7 @@ urlpatterns = [
     path('login/', obtain_auth_token, name = "login"),
     path('moj-profil/', mojProfilView, name = 'mojProfil'),
     path('moji-izvestaji/', MojiIzvestaji.as_view(), name = 'mojiIzvestaji'),
-    path('logout/', logout, name='logout')
+    path('logout/', logout, name='logout'),
+    path('moji-zahtevi/', MojiZahtevi.as_view(), name = 'mojiZahtevi'),
+    path('moji-pregledi/', MojiPregledi.as_view(), name='mojiPregledi'),
 ]

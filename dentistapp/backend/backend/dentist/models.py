@@ -126,7 +126,7 @@ class Terapija(models.Model):
     def create(cls, idI, idL, kolicina):
         return cls(idI = idI, idL=idL, kolicina=kolicina)
 
-    idI = models.OneToOneField(Izvestaj, on_delete=models.CASCADE) #ovo mozda nije dobro
+    idI = models.ForeignKey(Izvestaj, on_delete=models.CASCADE) #ovo mozda nije dobro
     idL = models.ForeignKey(Lekovi, on_delete = models.CASCADE)
     kolicina = models.CharField(max_length=100)
 

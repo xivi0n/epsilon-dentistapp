@@ -75,3 +75,17 @@ class MojiIzvestajiSerializer(serializers.ModelSerializer):
         model = Izvestaj
         fields = ['idI', 'datum', 'vrsta']
 
+class MojiZahteviSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Zahpre
+        fields = ['idZ', 'opis', 'dvod', 'dvdo']
+
+class MojiPreglediSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Pregledi
+        fields = ['idP', 'opis', 'dv', 'trajanje']
+
+
+

@@ -98,6 +98,37 @@ def logout(request):
 
     return Response("Izlogovan")
 
+class MojiZahtevi(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    def get(self, request, format=None):
+        korisnik = request.user
+        informacije = Informacije.objects.get(idK=korisnik)
+        if informacije.tipK == 'pacijent':
+            zahtevi = Zahpre.objects.filter(idK=korisnik)
+            serializer = MojiZahteviSerializer(zahtevi, many=True)
+        else:
+            zahtevi = Zahpre.objects.filter(idS=korisnik)
+            serializer = MojiZahteviSerializer(zahtevi, many=True)
+        return Response(serializer.data)
+
+class MojiPregledi(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes=(IsAuthenticated,)
+    def get(self, request, format=None):
+        korisnik = request.user
+        informacije = Informacije.objects.get(idK=korisnik)
+        if informacije.tipK == 'pacijent':
+            pregledi = Pregledi.objects.filter(idK=korisnik)
+            serializer = MojiPreglediSerializer(pregledi, many=True)
+        else:
+            pregledi = Pregledi.objects.filter(idS=korisnik)
+            serializer = MojiPreglediSerializer(pregledi, many=True)
+        return Response(serializer.data)
+
+
+
+
 
 
 
