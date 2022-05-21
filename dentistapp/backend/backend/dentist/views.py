@@ -12,7 +12,10 @@ from rest_framework.authtoken.models import Token
 from .models import *
 
 
+
 class SveUsluge(APIView):
+    authentication_classes = []
+    permission_classes = []
     def get(self, request, format=None):
         usluge = Usluge.objects.all()
         serializer = UslugeSerializer(usluge, many = True)
@@ -20,6 +23,7 @@ class SveUsluge(APIView):
 
 
 @api_view(['POST',])
+@permission_classes([])
 def registracija(request):
 
     if request.method == 'POST':
@@ -86,7 +90,13 @@ class MojiIzvestaji(APIView):
         return Response(serializer.data)
 
 
+@api_view(['GET',])
+@permission_classes((IsAuthenticated,))
+def logout(request):
 
+    request.user.auth_token.delete()
+
+    return Response("Izlogovan")
 
 
 
