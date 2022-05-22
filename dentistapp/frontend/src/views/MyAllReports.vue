@@ -6,19 +6,19 @@
                     <h2>Moji izveštaji</h2>
                 </div>
                 <div class="col-12 reports">
-                    <div class="row mx-2" :key="report.id" v-for="report in reports">
+                    <div class="row mx-2" :key="report.idI" v-for="report in reports">
                         <div class="col-lg-9 col-md-8 col-12 p-1">
                             <div class="p-2 cell">
-                                {{report.vrsta}}
+                                <p class="m-auto vrsta">{{report.vrsta}}</p>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 col-4 p-1">
                             <div class="p-2 cell text-center">
-                                {{report.datum}}
+                                <p class="m-auto">{{report.datum}}</p>
                             </div>
                         </div>
                         <div class="col-lg-1 col-md-2 col-12 p-1">
-                            <router-link to="/" class="router-link">
+                            <router-link :to="'/moji-izvestaji/izvestaj/' + report.idI" class="router-link">
                                 <button class="btn btn-primary text-center mb-2">Prikaži</button>
                             </router-link>
                         </div>
@@ -59,34 +59,34 @@ export default {
 
         // this.reports = [
         //                 {
-        //         id: 1,
-        //         title: "Naslov izvestaja",
-        //         date: "12.1.2022."
+        //         idI: 1,
+        //         vrsta: "Naslov izvestaja",
+        //         datum: "12.1.2022."
         //     },
         //     {
-        //         id: 2,
-        //         title: "Naslov izvestaja",
-        //         date: "12.1.2022."
+        //         idI: 2,
+        //         vrsta: "Naslov izvestaja",
+        //         datum: "12.1.2022."
         //     },
         //     {
-        //         id: 3,
-        //         title: "Naslov izvestaja",
-        //         date: "12.1.2022."
+        //         idI: 3,
+        //         vrsta: "Naslov izvestaja",
+        //         datum: "12.1.2022."
         //     },
         //     {
-        //         id: 4,
-        //         title: "Naslov izvestaja",
-        //         date: "12.1.2022."
+        //         idI: 4,
+        //         vrsta: "Naslov izvestaja",
+        //         datum: "12.1.2022."
         //     },
         //     {
-        //         id: 5,
-        //         title: "Naslov izvestaja",
-        //         date: "12.1.2022."
+        //         idI: 5,
+        //         vrsta: "Naslov izvestaja",
+        //         datum: "12.1.2022."
         //     },
         //     {
-        //         id: 6,
-        //         title: "Naslov izvestaja",
-        //         date: "12.1.2022."
+        //         idI: 6,
+        //         vrsta: "Naslov izvestaja",
+        //         datum: "12.1.2022."
         //     }
         // ]
     }
@@ -105,6 +105,15 @@ export default {
         font-weight: 700;
         font-size: 40px;
         color: #05284B;
+    }
+
+    p {
+        font-weight: 400;
+        color: #05284B;
+    }
+
+    p.vrsta {
+        padding-left: 10px;
     }
 
     .btn-primary, .btn:focus, .btn:active {
