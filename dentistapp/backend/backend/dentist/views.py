@@ -274,4 +274,58 @@ def posaljiZahtev(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def zakaziPregled(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    informacije = Informacije.objects.get(idK=korisnik)
+
+    if informacije.tipK != 'stomatolog':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'POST':
+        dv = request.data['dv']
+        trajanje = request.data['trajanje']
+        trajanje = int(trajanje)
+        dv = datetime.strptime(dv, "%Y-%m-%dT%H:%M:%S%z")
+        dvdo = dv + timedelta(minutes=trajanje)
+        data = {}
+        uslov1 = Q(idS=korisnik)
+        uslov2 = Q(dv__lt=dvdo)
+        uslov3 = Q(dv__gt=dv)
+        pregledi = Pregledi.objects.filter(uslov1 & uslov2 & uslov3)
+        if pregledi:
+            return Response("Zauzet termin", status=status.HTTP_400_BAD_REQUEST)
+        greska = []
+
+        pregledi = Pregledi.objects.filter(uslov1 & uslov2)
+
+        for p in pregledi:
+            datum = p.dv
+            trajanje = p.trajanje
+            ukupno = datum + timedelta(minutes=trajanje)
+            datum2 = datetime.strptime(request.data['dv'], "%Y-%m-%dT%H:%M:%S%z" )
+            if ukupno >= datum2:
+                greska.append(p)
+
+        if len(greska)>0:
+            return Response("Zauzet termin", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            noviPregled = Pregledi(
+                idS=korisnik,
+                idK_id=request.data['idK'],
+                opis=request.data['opis'],
+                dv=request.data['dv'],
+                trajanje=trajanje
+            )
+            noviPregled.save()
+            data['poruka'] = 'Uspesno kreiran pregled'
+        return Response(data, status=status.HTTP_200_OK)
+
+
+
 

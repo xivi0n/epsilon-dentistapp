@@ -17,4 +17,5 @@ urlpatterns = [
     path('slobodni-termini/', slobodniTermini, name='slobodniTermini'),
     path('lista-stomatologa/', sviStomatolozi, name='sviStomatolozi'),
     path('slanje-zahteva/', posaljiZahtev, name='posaljiZahtev'),
+    path('zakazi-pregled/', zakaziPregled, name='zakaziPregled'),
 ]
