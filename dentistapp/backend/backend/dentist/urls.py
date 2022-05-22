@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('moji-zahtevi/', MojiZahtevi.as_view(), name = 'mojiZahtevi'),
     path('moji-pregledi/', MojiPregledi.as_view(), name='mojiPregledi'),
+    path('moji-izvestaji/<int:id>/', MojiIzvestajiDetaljno.as_view(), name = 'mojiIzvestajiDetaljno')
 ]

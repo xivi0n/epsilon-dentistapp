@@ -10,6 +10,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from .models import *
+import datetime
+from django.utils.dateparse import parse_date
 
 
 
@@ -58,6 +60,7 @@ def mojProfilView(request):
         data['ime'] = informacije.ime
         data['prezime'] = informacije.prezime
         data['matbroj'] = informacije.matbroj
+        data['tipK'] = informacije.tipK
         return Response(data)
 
     if request.method == "PUT":
@@ -119,14 +122,30 @@ class MojiPregledi(APIView):
         korisnik = request.user
         informacije = Informacije.objects.get(idK=korisnik)
         if informacije.tipK == 'pacijent':
-            pregledi = Pregledi.objects.filter(idK=korisnik)
+            pregledi = Pregledi.objects.filter(idK=korisnik).filter(dv__gt=datetime.datetime.now())[0:6]
             serializer = MojiPreglediSerializer(pregledi, many=True)
         else:
             pregledi = Pregledi.objects.filter(idS=korisnik)
             serializer = MojiPreglediSerializer(pregledi, many=True)
         return Response(serializer.data)
 
+class MojiIzvestajiDetaljno(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
+    def get(self, request, id):
+        korisnik = request.user
+        data = {}
+        izvestaj = Izvestaj.objects.get(idI=id)
+        if izvestaj.idK != korisnik:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data['vrsta'] = izvestaj.vrsta
+        data['dijagnoza'] = izvestaj.dijagnoza
+        data['datum'] = izvestaj.datum
+        terapija = Terapija.objects.filter(idI = id)
+        serializer = TerapijaSerializer(terapija, many=True)
+        data['terapija'] = serializer.data
+        return Response(data)
 
 
 

@@ -87,5 +87,17 @@ class MojiPreglediSerializer(serializers.ModelSerializer):
         model = Pregledi
         fields = ['idP', 'opis', 'dv', 'trajanje']
 
+class LekoviSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Lekovi
+        fields = ['idL', 'opis']
+
+class TerapijaSerializer(serializers.ModelSerializer):
+
+    idL = LekoviSerializer()
+
+    class Meta:
+        model = Terapija
+        fields = ['idI', 'kolicina', 'idL']
 
