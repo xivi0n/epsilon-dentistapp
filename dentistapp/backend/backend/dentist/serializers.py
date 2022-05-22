@@ -101,3 +101,24 @@ class TerapijaSerializer(serializers.ModelSerializer):
         model = Terapija
         fields = ['idI', 'kolicina', 'idL']
 
+class StomatoloziSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Informacije
+        fields = ['idK', 'ime', 'prezime']
+
+class ZahteviSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Zahpre
+        fields = ['idK', 'idS', 'dvod', 'dvdo', 'opis']
+
+    def save(self):
+        zahtev = Zahpre(
+            idK=self.validated_data['idK'],
+            idS = self.validated_data['idS'],
+            dvod = self.validated_data['dvod'],
+            dvdo = self.validated_data['dvdo'],
+            opis = self.validated_data['opis']
+        )
+        zahtev.save()

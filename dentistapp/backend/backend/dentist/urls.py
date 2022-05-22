@@ -11,5 +11,10 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('moji-zahtevi/', MojiZahtevi.as_view(), name = 'mojiZahtevi'),
     path('moji-pregledi/', MojiPregledi.as_view(), name='mojiPregledi'),
-    path('moji-izvestaji/<int:id>/', MojiIzvestajiDetaljno.as_view(), name = 'mojiIzvestajiDetaljno')
+    path('moji-izvestaji/<int:id>/', MojiIzvestajiDetaljno.as_view(), name = 'mojiIzvestajiDetaljno'),
+    path('obrisi-zahtev/', brisanjeZahteva, name='brisanjeZahteva'),
+    path('otkazi-pregled/', brisanjePregleda, name='brisanjePregleda'),
+    path('slobodni-termini/', slobodniTermini, name='slobodniTermini'),
+    path('lista-stomatologa/', sviStomatolozi, name='sviStomatolozi'),
+    path('slanje-zahteva/', posaljiZahtev, name='posaljiZahtev'),
 ]

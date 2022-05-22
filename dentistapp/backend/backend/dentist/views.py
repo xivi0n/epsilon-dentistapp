@@ -12,7 +12,8 @@ from rest_framework.authtoken.models import Token
 from .models import *
 import datetime
 from django.utils.dateparse import parse_date
-
+from django.db.models import Q
+from datetime import datetime, timedelta
 
 
 class SveUsluge(APIView):
@@ -111,7 +112,7 @@ class MojiZahtevi(APIView):
             zahtevi = Zahpre.objects.filter(idK=korisnik)
             serializer = MojiZahteviSerializer(zahtevi, many=True)
         else:
-            zahtevi = Zahpre.objects.filter(idS=korisnik)
+            zahtevi = Zahpre.objects.filter(Q(idS=korisnik) | Q(idS_id=1)) #proveriti ovo kad se sredi baza
             serializer = MojiZahteviSerializer(zahtevi, many=True)
         return Response(serializer.data)
 
@@ -147,7 +148,130 @@ class MojiIzvestajiDetaljno(APIView):
         data['terapija'] = serializer.data
         return Response(data)
 
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def brisanjeZahteva(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
+    if request.method == 'POST':
+        informacije = Informacije.objects.get(idK=korisnik)
+        data = request.data
+        if informacije.tipK == 'pacijent':
+            zahtev = Zahpre.objects.get(idZ=data['idZ'])
+            if zahtev.idK == korisnik:
+                zahtev.delete()
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        elif informacije.tipK == 'stomatolog':
+            zahtev = Zahpre.objects.get(idZ=data['idZ'])
+            if zahtev.idS == korisnik:
+                zahtev.delete()
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    return Response("Uspesno izbrisan zahtev")
+
+
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def brisanjePregleda(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'POST':
+        informacije = Informacije.objects.get(idK=korisnik)
+        data = request.data
+        if informacije.tipK == 'pacijent':
+            pregled = Pregledi.objects.get(idP=data['idP'])
+            if pregled.idK == korisnik:
+                pregled.delete()
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        elif informacije.tipK == 'stomatolog':
+            pregled = Pregledi.objects.get(idP=data['idP'])
+            if pregled.idS == korisnik:
+                pregled.delete()
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    return Response("Uspesno obrisan pregled")
+
+@api_view(['GET',])
+@permission_classes((IsAuthenticated,))
+def slobodniTermini(request):
+    try:
+        korisnik =  request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        data = request.data
+        dvod = data['dvod']
+        dvdo = data['dvdo']
+        pregledi = Pregledi.objects.filter(dv__gte=dvod).filter(dv__lte=dvdo)
+        serializer = MojiPreglediSerializer(pregledi, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET',])
+@permission_classes((IsAuthenticated,))
+def sviStomatolozi(request):
+
+    if request.method == 'GET':
+        stomatolozi = Informacije.objects.filter(tipK__exact='stomatolog')
+        serializer = StomatoloziSerializer(stomatolozi, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def posaljiZahtev(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(stauts=status.HTTP_404_NOT_FOUND)
+
+    try:
+        stomatolog = Korisnik.objects.get(id=request.data['idS'])
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    korisnikInfo = Informacije.objects.get(idK=korisnik)
+    if korisnikInfo.tipK != 'pacijent':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'POST':
+        if request.data['idS'] == '1':
+            zahtev = Zahpre(
+                idK=korisnik,
+                idS_id=request.data['idS'],
+                dvod=request.data['dvod'],
+                dvdo=request.data['dvdo'],
+                opis=request.data['opis']
+            )
+        else:
+            informacije = Informacije.objects.get(idK=stomatolog)
+            if informacije.tipK == 'stomatolog':
+                zahtev = Zahpre(
+                    idK=korisnik,
+                    idS_id=request.data['idS'],
+                    dvod=request.data['dvod'],
+                    dvdo=request.data['dvdo'],
+                    opis=request.data['opis']
+                )
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        data={}
+        data['response'] = "Uspesno poslat zahtev"
+        zahtev.save()
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
