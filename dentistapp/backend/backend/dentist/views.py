@@ -138,7 +138,7 @@ class MojiIzvestajiDetaljno(APIView):
         korisnik = request.user
         data = {}
         izvestaj = Izvestaj.objects.get(idI=id)
-        if izvestaj.idK != korisnik:
+        if izvestaj.idK != korisnik and izvestaj.idS != korisnik:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         data['vrsta'] = izvestaj.vrsta
         data['dijagnoza'] = izvestaj.dijagnoza
