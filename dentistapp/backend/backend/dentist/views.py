@@ -203,7 +203,7 @@ def brisanjePregleda(request):
 
 @api_view(['GET',])
 @permission_classes((IsAuthenticated,))
-def slobodniTermini(request):
+def zauzetiTermini(request):
     try:
         korisnik =  request.user
     except Korisnik.DoesNotExist:
@@ -213,8 +213,18 @@ def slobodniTermini(request):
         data = request.data
         dvod = data['dvod']
         dvdo = data['dvdo']
-        pregledi = Pregledi.objects.filter(dv__gte=dvod).filter(dv__lte=dvdo)
-        serializer = MojiPreglediSerializer(pregledi, many=True)
+        zauzeto =[]
+        pregledi = Pregledi.objects.filter(dv__lte=dvdo)
+        for p in pregledi:
+            datum = p.dv
+            trajanje = p.trajanje
+            ukupno = datum + timedelta(minutes=trajanje)
+            datumdo = datetime.strptime(request.data['dvdo'],"%Y-%m-%dT%H:%M:%S%z")
+            datumod = datetime.strptime(request.data['dvod'], "%Y-%m-%dT%H:%M:%S%z")
+            if ukupno>=datumod or datum>=datumod:
+                zauzeto.append(p)
+
+        serializer = MojiPreglediSerializer(zauzeto, many=True)
         return Response(serializer.data)
 
 
@@ -300,7 +310,6 @@ def zakaziPregled(request):
         pregledi = Pregledi.objects.filter(uslov1 & uslov2 & uslov3)
         if pregledi:
             return Response("Zauzet termin", status=status.HTTP_400_BAD_REQUEST)
-        greska = []
 
         pregledi = Pregledi.objects.filter(uslov1 & uslov2)
 
@@ -310,20 +319,17 @@ def zakaziPregled(request):
             ukupno = datum + timedelta(minutes=trajanje)
             datum2 = datetime.strptime(request.data['dv'], "%Y-%m-%dT%H:%M:%S%z" )
             if ukupno >= datum2:
-                greska.append(p)
+                return Response("Zauzet termin", status=status.HTTP_400_BAD_REQUEST)
 
-        if len(greska)>0:
-            return Response("Zauzet termin", status=status.HTTP_400_BAD_REQUEST)
-        else:
-            noviPregled = Pregledi(
-                idS=korisnik,
-                idK_id=request.data['idK'],
-                opis=request.data['opis'],
-                dv=request.data['dv'],
-                trajanje=trajanje
-            )
-            noviPregled.save()
-            data['poruka'] = 'Uspesno kreiran pregled'
+        noviPregled = Pregledi(
+            idS=korisnik,
+            idK_id=request.data['idK'],
+            opis=request.data['opis'],
+            dv=request.data['dv'],
+            trajanje=trajanje
+        )
+        noviPregled.save()
+        data['poruka'] = 'Uspesno kreiran pregled'
         return Response(data, status=status.HTTP_200_OK)
 
 
