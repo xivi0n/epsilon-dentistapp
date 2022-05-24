@@ -14,7 +14,7 @@ import datetime
 from django.utils.dateparse import parse_date
 from django.db.models import Q
 from datetime import datetime, timedelta
-
+import json
 
 class SveUsluge(APIView):
     authentication_classes = []
@@ -245,13 +245,19 @@ def zauzetiTermini(request):
     except Korisnik.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    info = Informacije.objects.get(idK=korisnik)
+
     if request.method == 'GET':
         data = request.data
         datum = data['datum']
         godina = datum[:4]
         mesec = datum[5:7]
         dan = datum[8:10]
-        termini = Pregledi.objects.filter(dv__year=godina).filter(dv__month=mesec).filter(dv__day=dan).filter(idS=korisnik)
+        if info.tipK == 'stomatolog':
+            termini = Pregledi.objects.filter(dv__year=godina).filter(dv__month=mesec).filter(dv__day=dan).filter(idS=korisnik)
+        else:
+            idS = data['idS']
+            termini = Pregledi.objects.filter(dv__year=godina).filter(dv__month=mesec).filter(dv__day=dan).filter(idS_id=idS)
         serializer = MojiPreglediSerializer(termini, many=True)
         return Response(serializer.data)
 
@@ -361,5 +367,55 @@ def zakaziPregled(request):
         return Response(data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET',])
+@permission_classes((IsAuthenticated,))
+def sviLekovi(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        lekovi = Lekovi.objects.all()
+        serializer = LekoviSerializer(lekovi, many=True)
+
+    return Response(serializer.data)
 
 
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def novIzvestaj(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    informacije = Informacije.objects.get(idK=korisnik)
+    if informacije.tipK == 'pacijent':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'POST':
+        matbroj = request.data['matbroj']
+        vrsta = request.data['vrsta']
+        terapija = request.data['terapija']
+        dijagnoza = request.data['dijagnoza']
+        datum = request.data['datum']
+        info = Informacije.objects.get(matbroj=matbroj)
+        izvestaj = Izvestaj(
+            idS=korisnik,
+            idK=info.idK,
+            vrsta = vrsta,
+            dijagnoza=dijagnoza,
+            datum=datum
+        )
+        izvestaj.save()
+        lista = json.loads(terapija)
+        for i in range(len(lista)):
+            novaTerapija = Terapija(
+                idI=izvestaj,
+                idL_id=lista[i]['idL'],
+                kolicina=lista[i]['kolicina']
+            )
+            novaTerapija.save()
+
+        return Response(status=status.HTTP_200_OK)

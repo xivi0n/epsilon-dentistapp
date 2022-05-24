@@ -18,4 +18,6 @@ urlpatterns = [
     path('lista-stomatologa/', sviStomatolozi, name='sviStomatolozi'),
     path('slanje-zahteva/', posaljiZahtev, name='posaljiZahtev'),
     path('zakazi-pregled/', zakaziPregled, name='zakaziPregled'),
+    path('svi-lekovi/', sviLekovi, name='sviLekovi'),
+    path('nov-izvestaj/', novIzvestaj, name='novIzvestaj')
 ]
