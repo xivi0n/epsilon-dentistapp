@@ -122,3 +122,24 @@ class ZahteviSerializer(serializers.ModelSerializer):
             opis = self.validated_data['opis']
         )
         zahtev.save()
+
+
+
+class MojiIzvestajiPacijentSerializer(serializers.ModelSerializer):
+
+    ime = serializers.CharField()
+    prezime = serializers.CharField()
+
+    class Meta:
+        model = Izvestaj
+        fields = ['idI', 'datum', 'vrsta', 'ime', 'prezime']
+
+class MojiIzvestajiStomatologSerializer(serializers.ModelSerializer):
+
+    ime = serializers.CharField()
+    prezime = serializers.CharField()
+    matbroj = serializers.CharField()
+
+    class Meta:
+        model = Izvestaj
+        fields = ['idI', 'datum', 'vrsta', 'ime', 'prezime', 'matbroj']

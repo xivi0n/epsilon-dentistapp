@@ -84,14 +84,33 @@ class MojiIzvestaji(APIView):
     permission_classes = (IsAuthenticated,)
     def get(self, request, format=None):
         korisnik = request.user
+        data = []
+        dataSerializer = {}
         informacije = Informacije.objects.get(idK=korisnik)
         if informacije.tipK == 'pacijent':
             izvestaji = Izvestaj.objects.filter(idK=korisnik)
-            serializer = MojiIzvestajiSerializer(izvestaji, many=True)
+            for i in izvestaji:
+                info = Informacije.objects.get(idK=i.idS)
+                dataSerializer['ime'] = info.ime
+                dataSerializer['prezime'] = info.prezime
+                dataSerializer['datum'] = i.datum
+                dataSerializer['idI'] = i.idI
+                dataSerializer['vrsta'] = i.vrsta
+                serializer = MojiIzvestajiPacijentSerializer(dataSerializer)
+                data.append(serializer.data)
         else:
             izvestaji = Izvestaj.objects.filter(idS=korisnik)
-            serializer = MojiIzvestajiSerializer(izvestaji, many = True)
-        return Response(serializer.data)
+            for i in izvestaji:
+                info = Informacije.objects.get(idK=i.idK)
+                dataSerializer['ime'] = info.ime
+                dataSerializer['prezime'] = info.prezime
+                dataSerializer['matbroj'] = info.matbroj
+                dataSerializer['datum'] = i.datum
+                dataSerializer['idI'] = i.idI
+                dataSerializer['vrsta'] = i.vrsta
+                serializer = MojiIzvestajiStomatologSerializer(dataSerializer)
+                data.append(serializer.data)
+        return Response(data)
 
 
 @api_view(['GET',])
@@ -137,15 +156,32 @@ class MojiIzvestajiDetaljno(APIView):
     def get(self, request, id):
         korisnik = request.user
         data = {}
+        informacije = Informacije.objects.get(idK=korisnik)
         izvestaj = Izvestaj.objects.get(idI=id)
         if izvestaj.idK != korisnik and izvestaj.idS != korisnik:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        data['vrsta'] = izvestaj.vrsta
-        data['dijagnoza'] = izvestaj.dijagnoza
-        data['datum'] = izvestaj.datum
-        terapija = Terapija.objects.filter(idI = id)
-        serializer = TerapijaSerializer(terapija, many=True)
-        data['terapija'] = serializer.data
+        if informacije.tipK == 'stomatolog':
+            pacijent = Informacije.objects.get(idK=izvestaj.idK)
+            data['vrsta'] = izvestaj.vrsta
+            data['dijagnoza'] = izvestaj.dijagnoza
+            data['datum'] = izvestaj.datum
+            data['matbroj'] = pacijent.matbroj
+            data['ime'] = pacijent.ime
+            data['prezime'] = pacijent.prezime
+            terapija = Terapija.objects.filter(idI = id)
+            serializer = TerapijaSerializer(terapija, many=True)
+            data['terapija'] = serializer.data
+        else:
+            stomatolog = Informacije.objects.get(idK=izvestaj.idS)
+            data['vrsta'] = izvestaj.vrsta
+            data['dijagnoza'] = izvestaj.dijagnoza
+            data['datum'] = izvestaj.datum
+            data['ime'] = stomatolog.ime
+            data['prezime'] = stomatolog.prezime
+            terapija = Terapija.objects.filter(idI=id)
+            serializer = TerapijaSerializer(terapija, many=True)
+            data['terapija'] = serializer.data
+
         return Response(data)
 
 @api_view(['POST',])
