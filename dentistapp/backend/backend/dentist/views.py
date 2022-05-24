@@ -247,20 +247,12 @@ def zauzetiTermini(request):
 
     if request.method == 'GET':
         data = request.data
-        dvod = data['dvod']
-        dvdo = data['dvdo']
-        zauzeto =[]
-        pregledi = Pregledi.objects.filter(dv__lte=dvdo)
-        for p in pregledi:
-            datum = p.dv
-            trajanje = p.trajanje
-            ukupno = datum + timedelta(minutes=trajanje)
-            datumdo = datetime.strptime(request.data['dvdo'],"%Y-%m-%dT%H:%M:%S%z")
-            datumod = datetime.strptime(request.data['dvod'], "%Y-%m-%dT%H:%M:%S%z")
-            if ukupno>=datumod or datum>=datumod:
-                zauzeto.append(p)
-
-        serializer = MojiPreglediSerializer(zauzeto, many=True)
+        datum = data['datum']
+        godina = datum[:4]
+        mesec = datum[5:7]
+        dan = datum[8:10]
+        termini = Pregledi.objects.filter(dv__year=godina).filter(dv__month=mesec).filter(dv__day=dan).filter(idS=korisnik)
+        serializer = MojiPreglediSerializer(termini, many=True)
         return Response(serializer.data)
 
 
