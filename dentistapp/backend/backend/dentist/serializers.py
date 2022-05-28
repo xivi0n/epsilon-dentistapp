@@ -79,7 +79,7 @@ class MojiZahteviSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Zahpre
-        fields = ['idZ', 'opis', 'dvod', 'dvdo']
+        fields = ['idZ', 'opis', 'dvod', 'dvdo', 'idK']
 
 class MojiPreglediSerializer(serializers.ModelSerializer):
 
@@ -143,3 +143,10 @@ class MojiIzvestajiStomatologSerializer(serializers.ModelSerializer):
     class Meta:
         model = Izvestaj
         fields = ['idI', 'datum', 'vrsta', 'ime', 'prezime', 'matbroj']
+
+
+class MojPregledSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Pregledi
+        fields = ['idP', 'opis', 'dv', 'trajanje', 'idK', 'idS']

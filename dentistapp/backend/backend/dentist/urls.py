@@ -19,5 +19,6 @@ urlpatterns = [
     path('slanje-zahteva/', posaljiZahtev, name='posaljiZahtev'),
     path('zakazi-pregled/', zakaziPregled, name='zakaziPregled'),
     path('svi-lekovi/', sviLekovi, name='sviLekovi'),
-    path('nov-izvestaj/', novIzvestaj, name='novIzvestaj')
+    path('nov-izvestaj/', novIzvestaj, name='novIzvestaj'),
+    path('pregled/<int:id>/', DohvatiPregled.as_view(), name = 'dohvatiPregled')
 ]

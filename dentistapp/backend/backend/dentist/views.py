@@ -142,7 +142,7 @@ class MojiPregledi(APIView):
         korisnik = request.user
         informacije = Informacije.objects.get(idK=korisnik)
         if informacije.tipK == 'pacijent':
-            pregledi = Pregledi.objects.filter(idK=korisnik).filter(dv__gt=datetime.datetime.now())[0:6]
+            pregledi = Pregledi.objects.filter(idK=korisnik)
             serializer = MojiPreglediSerializer(pregledi, many=True)
         else:
             pregledi = Pregledi.objects.filter(idS=korisnik)
@@ -203,7 +203,7 @@ def brisanjeZahteva(request):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         elif informacije.tipK == 'stomatolog':
             zahtev = Zahpre.objects.get(idZ=data['idZ'])
-            if zahtev.idS == korisnik:
+            if zahtev.idS == korisnik or zahtev.idS == Korisnik.objects.get(id=1):
                 zahtev.delete()
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -248,15 +248,15 @@ def zauzetiTermini(request):
     info = Informacije.objects.get(idK=korisnik)
 
     if request.method == 'GET':
-        data = request.data
-        datum = data['datum']
+        datum = request.GET.get('datum', '')
         godina = datum[:4]
         mesec = datum[5:7]
         dan = datum[8:10]
         if info.tipK == 'stomatolog':
             termini = Pregledi.objects.filter(dv__year=godina).filter(dv__month=mesec).filter(dv__day=dan).filter(idS=korisnik)
         else:
-            idS = data['idS']
+            idS = request.GET.get('idS', '')
+            idS = int(idS)
             termini = Pregledi.objects.filter(dv__year=godina).filter(dv__month=mesec).filter(dv__day=dan).filter(idS_id=idS)
         serializer = MojiPreglediSerializer(termini, many=True)
         return Response(serializer.data)
@@ -335,7 +335,7 @@ def zakaziPregled(request):
         dv = request.data['dv']
         trajanje = request.data['trajanje']
         trajanje = int(trajanje)
-        dv = datetime.strptime(dv, "%Y-%m-%dT%H:%M:%S%z")
+        dv = datetime.strptime(dv, "%Y-%m-%dT%H:%M:%S.%f%z")
         dvdo = dv + timedelta(minutes=trajanje)
         data = {}
         uslov1 = Q(idS=korisnik)
@@ -351,8 +351,8 @@ def zakaziPregled(request):
             datum = p.dv
             trajanje = p.trajanje
             ukupno = datum + timedelta(minutes=trajanje)
-            datum2 = datetime.strptime(request.data['dv'], "%Y-%m-%dT%H:%M:%S%z" )
-            if ukupno >= datum2:
+            datum2 = datetime.strptime(request.data['dv'], "%Y-%m-%dT%H:%M:%S.%f%z")
+            if ukupno > datum2:
                 return Response("Zauzet termin", status=status.HTTP_400_BAD_REQUEST)
 
         noviPregled = Pregledi(
@@ -409,13 +409,25 @@ def novIzvestaj(request):
             datum=datum
         )
         izvestaj.save()
-        lista = json.loads(terapija)
-        for i in range(len(lista)):
+        for i in range(len(terapija)):
             novaTerapija = Terapija(
                 idI=izvestaj,
-                idL_id=lista[i]['idL'],
-                kolicina=lista[i]['kolicina']
+                idL_id=terapija[i]['idL'],
+                kolicina=terapija[i]['kolicina']
             )
             novaTerapija.save()
 
         return Response(status=status.HTTP_200_OK)
+
+
+
+class DohvatiPregled(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, id):
+        pregled = Pregledi.objects.filter(idP=id)
+        if not pregled:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = MojPregledSerializer(pregled, many=True)
+        return Response(serializer.data)
