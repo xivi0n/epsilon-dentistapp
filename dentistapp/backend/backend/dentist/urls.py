@@ -20,5 +20,6 @@ urlpatterns = [
     path('zakazi-pregled/', zakaziPregled, name='zakaziPregled'),
     path('svi-lekovi/', sviLekovi, name='sviLekovi'),
     path('nov-izvestaj/', novIzvestaj, name='novIzvestaj'),
-    path('pregled/<int:id>/', DohvatiPregled.as_view(), name = 'dohvatiPregled')
+    path('pregled/<int:id>/', DohvatiPregled.as_view(), name = 'dohvatiPregled'),
+    path('korisnik/<int:id>/', DohvatiKorisnika.as_view(), name = 'dohvatiKorisnika')
 ]

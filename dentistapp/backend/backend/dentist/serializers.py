@@ -150,3 +150,9 @@ class MojPregledSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pregledi
         fields = ['idP', 'opis', 'dv', 'trajanje', 'idK', 'idS']
+
+class InformacijeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Informacije
+        fields = ['idK','ime', 'prezime', 'matbroj', 'tipK', 'slika']

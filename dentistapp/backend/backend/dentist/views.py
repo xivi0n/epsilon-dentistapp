@@ -431,3 +431,24 @@ class DohvatiPregled(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = MojPregledSerializer(pregled, many=True)
         return Response(serializer.data)
+
+
+class DohvatiKorisnika(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, id):
+        try:
+            korisnik = request.user
+        except Korisnik.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        infoK = Informacije.objects.get(idK=korisnik)
+
+        if infoK.tipK == 'pacijent':
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        informacije = Informacije.objects.get(idK_id=id)
+        serializer = InformacijeSerializer(informacije)
+
+        return Response(serializer.data)
