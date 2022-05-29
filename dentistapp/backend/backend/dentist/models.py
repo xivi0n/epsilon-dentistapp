@@ -137,7 +137,7 @@ class Pitanja(models.Model):
         return cls(idP=idP, idK=idK, naslov=naslov, opis=opis)
 
     idP = models.AutoField(primary_key = True)
-    idK = models.ForeignKey(Korisnik, on_delete = models.CASCADE)
+    email = models.EmailField(max_length=100, default="")
     naslov = models.CharField(max_length=100)
     opis = models.TextField(max_length= 255)
 

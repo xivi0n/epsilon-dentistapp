@@ -156,3 +156,9 @@ class InformacijeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Informacije
         fields = ['idK','ime', 'prezime', 'matbroj', 'tipK', 'slika']
+
+class PitanjaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Pitanja
+        fields = ['idP', 'naslov', 'opis', 'email']

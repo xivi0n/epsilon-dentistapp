@@ -14,6 +14,7 @@ import datetime
 from django.utils.dateparse import parse_date
 from django.db.models import Q
 from datetime import datetime, timedelta
+from django.core.mail import EmailMessage
 import json
 
 class SveUsluge(APIView):
@@ -452,3 +453,84 @@ class DohvatiKorisnika(APIView):
         serializer = InformacijeSerializer(informacije)
 
         return Response(serializer.data)
+
+
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def novoPitanje(request):
+
+    if request.method == 'POST':
+        email = request.data['email']
+        naslov = request.data['naslov']
+        opis = request.data['opis']
+
+        novoP = Pitanja(
+            email=email,
+            naslov=naslov,
+            opis=opis
+        )
+        novoP.save()
+        return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET',])
+@permission_classes((IsAuthenticated,))
+def dohvatiPitanja(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    info = Informacije.objects.get(idK=korisnik)
+
+    if info.tipK == 'pacijent':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "GET":
+        pitanja = Pitanja.objects.all()
+
+        serializer = PitanjaSerializer(pitanja, many=True)
+
+        return Response(serializer.data)
+
+
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def obrisiPitanje(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    info = Informacije.objects.get(idK=korisnik)
+
+    if info.tipK == 'pacijent':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'POST':
+        id = request.data['idP']
+        pitanje = Pitanja.objects.get(idP=id)
+        pitanje.delete()
+        return Response(status=status.HTTP_200_OK)
+
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def odgovoriNaPitanje(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    info = Informacije.objects.get(idK=korisnik)
+
+    if info.tipK == 'pacijent':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'POST':
+        emailTo = request.data['email']
+        #emailTo = 'dentistapp4@gmail.com'
+        naslov = request.data['naslov']
+        odgovor = request.data['odgovor']
+
+        email = EmailMessage(naslov, odgovor, to=[emailTo])
+        email.send()
+        return Response(status=status.HTTP_200_OK)

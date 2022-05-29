@@ -134,7 +134,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -145,6 +144,13 @@ AUTH_USER_MODEL = 'dentist.Korisnik'
 MEDIA_URL = '/media/'
 import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dentistapp4@gmail.com'
+EMAIL_HOST_PASSWORD = 'password123#'
+EMAIL_PORT = 587
 
 
 # Default primary key field type

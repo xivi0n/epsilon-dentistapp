@@ -21,5 +21,9 @@ urlpatterns = [
     path('svi-lekovi/', sviLekovi, name='sviLekovi'),
     path('nov-izvestaj/', novIzvestaj, name='novIzvestaj'),
     path('pregled/<int:id>/', DohvatiPregled.as_view(), name = 'dohvatiPregled'),
-    path('korisnik/<int:id>/', DohvatiKorisnika.as_view(), name = 'dohvatiKorisnika')
+    path('korisnik/<int:id>/', DohvatiKorisnika.as_view(), name = 'dohvatiKorisnika'),
+    path('novo-pitanje/', novoPitanje, name='novoPitanje'),
+    path('pitanja/', dohvatiPitanja, name = 'dohvatiPitanja'),
+    path('obrisi-pitanje/', obrisiPitanje, name='obrisiPitanje'),
+    path('odgovori/', odgovoriNaPitanje, name='odgovoriNaPitanje'),
 ]
