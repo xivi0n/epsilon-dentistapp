@@ -622,6 +622,19 @@ povratna vrednost su ocene"""
 def dohvatiOcene(request):
 
     if request.method == "GET":
+        data = {}
+        returnData = []
         ocene = Ocene.objects.all()[0:5]
-        serializer = OceneSerializer(ocene, many=True)
-        return Response(serializer.data)
+        for o in ocene:
+            idK = o.idK
+            info = Informacije.objects.get(idK=idK)
+            ime = info.ime
+            prezime = info.prezime
+            data['ime'] = ime
+            data['prezime'] = prezime
+            data['idO'] = o.idO
+            data['opis'] = o.opis
+            data['ocena'] = o.ocena
+            serializer = OceneSerializer(data)
+            returnData.append(serializer.data)
+        return Response(returnData)

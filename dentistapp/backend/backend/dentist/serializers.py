@@ -193,6 +193,9 @@ class PitanjaSerializer(serializers.ModelSerializer):
 """Klasa OceneSerializer se koristi za serijalizaciju klase Ocene"""
 class OceneSerializer(serializers.ModelSerializer):
 
+    ime = serializers.CharField()
+    prezime = serializers.CharField()
+
     class Meta:
         model = Ocene
-        fields = ['idO', 'ocena', 'opis']
+        fields = ['idO', 'ocena', 'opis', 'ime', 'prezime']
