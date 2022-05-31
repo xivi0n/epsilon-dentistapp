@@ -17,15 +17,27 @@ from datetime import datetime, timedelta
 from django.core.mail import EmailMessage
 import json
 
+# Nikola Krstic 0273/19
+# Anja Jevtovic 0281/19
+
+
+"""
+SveUsluge - Klasa za dohvatanje svih usluga iz baze
+"""
 class SveUsluge(APIView):
     authentication_classes = []
     permission_classes = []
+
+    """funkcija get vraca sve usluge"""
     def get(self, request, format=None):
         usluge = Usluge.objects.all()
         serializer = UslugeSerializer(usluge, many = True)
         return Response(serializer.data)
 
 
+
+"""funkcija registracija koristi se za registrovanje novog korisnika na osnovu podataka koje korisnik unosi
+povratna vrednost je infromacija o korisniku i http status"""
 @api_view(['POST',])
 @permission_classes([])
 def registracija(request):
@@ -45,6 +57,10 @@ def registracija(request):
         return Response(data, status=status.HTTP_200_OK)
 
 
+
+"""funkcija mojProfilView se koristi za dohvatanje podataka o profilu za korisnika koji je pozove
+ukoliko je metoda GET povratna vrednost su informacije o korisniku, a ukoliko je metoda put
+azuriraju se podaci korisnika u bazi i povratna vrednost je poruka o uspesnosti """
 @api_view(['GET','PUT',])
 @permission_classes((IsAuthenticated,))
 def mojProfilView(request):
@@ -80,6 +96,9 @@ def mojProfilView(request):
             return Response(data=data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+"""klasa MojiIzvestaji se koristi za dohvatanje izvestaja vezanih za korisnike"""
+"""funkcija get se koristi za dohvatanje izvestaja"""
 class MojiIzvestaji(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -114,6 +133,7 @@ class MojiIzvestaji(APIView):
         return Response(data)
 
 
+"""funkcija logout se koristi za odjavljivanje korisnika iz sistema, brisanjem tokena iz baze"""
 @api_view(['GET',])
 @permission_classes((IsAuthenticated,))
 def logout(request):
@@ -122,6 +142,8 @@ def logout(request):
 
     return Response("Izlogovan")
 
+
+"""Klasa MojiZahtevi se koristi za dohvatanje zahteva korisnika iz baze podataka"""
 class MojiZahtevi(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -136,6 +158,8 @@ class MojiZahtevi(APIView):
             serializer = MojiZahteviSerializer(zahtevi, many=True)
         return Response(serializer.data)
 
+
+"""Klasa MojiPregledi se koristi za dohvatanje pregleda korisnika iz baze podataka"""
 class MojiPregledi(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes=(IsAuthenticated,)
@@ -150,6 +174,8 @@ class MojiPregledi(APIView):
             serializer = MojiPreglediSerializer(pregledi, many=True)
         return Response(serializer.data)
 
+
+"""Klasa MojiIzvestajiDetaljno se koristi za dohvatanje detaljnih informacija vezanih za izvestaj korisnika"""
 class MojiIzvestajiDetaljno(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -185,6 +211,8 @@ class MojiIzvestajiDetaljno(APIView):
 
         return Response(data)
 
+"""funkcija brisanjeZahteva se koristi za brisanje zahteva za pregled iz baze podataka, povratna vrednost
+je poruka o uspesnosti funkcije"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def brisanjeZahteva(request):
@@ -212,6 +240,8 @@ def brisanjeZahteva(request):
     return Response("Uspesno izbrisan zahtev")
 
 
+"""funkcija brisanjePregleda se koristi za brisanje pregleda iz baze podataka, povratna vrednost je
+poruka o uspesnosti funkcije"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def brisanjePregleda(request):
@@ -238,6 +268,9 @@ def brisanjePregleda(request):
 
     return Response("Uspesno obrisan pregled")
 
+
+"""funkcija zauzetiTermini se koristi za dohvatanje svih zauzetih termina za neki datum,
+povratna vrednost funkcije su zauzeti termini u zeljenom datumu"""
 @api_view(['GET',])
 @permission_classes((IsAuthenticated,))
 def zauzetiTermini(request):
@@ -263,6 +296,8 @@ def zauzetiTermini(request):
         return Response(serializer.data)
 
 
+"""funkcija sviStomatolozi se koristi za dohvatanje svih stomatologa iz baze podataka,
+povratna vrednost funkcije je lista stomatologa"""
 @api_view(['GET',])
 @permission_classes((IsAuthenticated,))
 def sviStomatolozi(request):
@@ -273,6 +308,8 @@ def sviStomatolozi(request):
         return Response(serializer.data)
 
 
+"""funkcija posaljiZahtev se koristi za slanje zahteva za pregled od strane pacijenta
+na osnovu podataka se pamti zahtev u bazi, povratna vrednost je http status i poruka o uspesnosti"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def posaljiZahtev(request):
@@ -319,6 +356,9 @@ def posaljiZahtev(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+"""funkcija zakaziPregled se koristi za zakazivanje pregleda od strane stomatologa, 
+na osnovu podataka, ukoliko je termin slobodan vrsi se upis pregleda u bazu,
+povratna vrednost je poruka o uspesnosti i http status"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def zakaziPregled(request):
@@ -368,6 +408,8 @@ def zakaziPregled(request):
         return Response(data, status=status.HTTP_200_OK)
 
 
+"""funkcija sviLekovi se koristi za dohvatanje svih lekova iz baze podataka,
+povratna vrednost je lista lekova iz baze"""
 @api_view(['GET',])
 @permission_classes((IsAuthenticated,))
 def sviLekovi(request):
@@ -383,6 +425,8 @@ def sviLekovi(request):
     return Response(serializer.data)
 
 
+"""funkcija novIzvestaj se koristi za kreiranje novog izvestaja od strane stomatologa,
+na osnovu prosledjenih podataka vrsi se upis informacija u bazu, povratna vrednost je http status"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def novIzvestaj(request):
@@ -422,6 +466,8 @@ def novIzvestaj(request):
 
 
 
+"""Klasa DohvatiPregled se koristi za dohvatanje odredjenog pregleda korisnika
+funkcija get na osnovu prosledjenog id dohvata iz baze pregled, povratna vrednost je pregled"""
 class DohvatiPregled(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -434,6 +480,9 @@ class DohvatiPregled(APIView):
         return Response(serializer.data)
 
 
+"""Klasa DohvatiKorisnika se koirsti za dohvatanje korisnika iz baze podataka
+funkcija get na osnovu prosledjenog id dohvata korisnika sa tim id iz baze podataka,
+povratna vrednost funkcije su informacije o tom korisniku"""
 class DohvatiKorisnika(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -455,6 +504,8 @@ class DohvatiKorisnika(APIView):
         return Response(serializer.data)
 
 
+"""funkcija novoPitanje se koristi za upis novog pitanja u bazu podataka,
+na osnovu prosledjenih podataka, pitanje se cuva u bazi, povratna vrednost je http status"""
 @api_view(['POST',])
 @permission_classes(())
 def novoPitanje(request):
@@ -472,6 +523,8 @@ def novoPitanje(request):
         novoP.save()
         return Response(status=status.HTTP_200_OK)
 
+"""funkcija dohvatiPitanja se koristi od strane stomatologa da dohvati sva pitanja iz baze,
+povratna vrednost funkcije je lista pitanja"""
 @api_view(['GET',])
 @permission_classes((IsAuthenticated,))
 def dohvatiPitanja(request):
@@ -493,6 +546,8 @@ def dohvatiPitanja(request):
         return Response(serializer.data)
 
 
+"""funkcija obrisiPitanje se koristi za brisanje pitanja iz baze na osnovu id koji je prosledjen,
+povratna vrednost funkcije je http status"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def obrisiPitanje(request):
@@ -512,6 +567,9 @@ def obrisiPitanje(request):
         pitanje.delete()
         return Response(status=status.HTTP_200_OK)
 
+
+"""funkcija odgovoriNaPitanje se koristi od strane stomatologa za odgovaranje na odredjeno pitanje korisnika,
+funkcija salje email korisniku na adresu prosledjenu u zahtevu, povratna vrednost je http status"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def odgovoriNaPitanje(request):
@@ -536,6 +594,8 @@ def odgovoriNaPitanje(request):
         return Response(status=status.HTTP_200_OK)
 
 
+"""funkcija novaOcena se koristi za upis ocene u bazu podataka,
+povratna vrednost je http status"""
 @api_view(['POST',])
 @permission_classes((IsAuthenticated,))
 def novaOcena(request):
@@ -555,6 +615,8 @@ def novaOcena(request):
         nova.save()
         return Response(status=status.HTTP_200_OK)
 
+"""funkcija dohvatiOcene se koristi za dohvatanje poslednjih 5 ocena iz baze podataka,
+povratna vrednost su ocene"""
 @api_view(['GET',])
 @permission_classes(())
 def dohvatiOcene(request):

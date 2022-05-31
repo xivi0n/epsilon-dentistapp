@@ -2,6 +2,9 @@ from django.urls import path, include
 from .views import *
 from rest_framework.authtoken.views import obtain_auth_token
 
+#Nikola Krstic 0273/19
+#Anja Jevtovic 0281/19
+
 urlpatterns = [
     path('sve-usluge/', SveUsluge.as_view()),
     path('registracija/', registracija, name = 'registracija'),

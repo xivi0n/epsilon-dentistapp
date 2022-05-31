@@ -9,6 +9,12 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 # Create your models here.
 
+#Nikola Krstic 0273/19
+#Anja Jevtovic 0281/19
+
+"""Klasa CustomAccountManager se koristi za kreiranje korisnika
+funkcija create_user se koristi za kreiranje obicnog korisnika,
+funkcija create_superuser se koristi za kreiranje superusera"""
 class CustomAccountManager(BaseUserManager):
 
     def create_user(self, email, password=None):
@@ -33,6 +39,7 @@ class CustomAccountManager(BaseUserManager):
 
 
 
+"""Klasa Korisnik se koristi za modelovanje Korisnika u bazi podataka"""
 class Korisnik(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(unique=True)
@@ -55,7 +62,8 @@ class Korisnik(AbstractBaseUser, PermissionsMixin):
         return True
 
 
-
+"""Klasa Informacije se koristi za modelovanje Informacija u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Informacije"""
 class Informacije(models.Model):
 
     @classmethod
@@ -69,6 +77,9 @@ class Informacije(models.Model):
     slika = models.ImageField(upload_to='imgs/', null=True, blank=True) #dodao
     tipK = models.CharField(max_length=20, default='pacijent')
 
+
+"""Klasa Ocene se koristi za modelovanje Ocena u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Ocene"""
 class Ocene(models.Model):
 
     @classmethod
@@ -86,7 +97,8 @@ class Ocene(models.Model):
     )
     opis = models.CharField(max_length=255)
 
-
+"""Klasa Usluge se koristi za modelovanje usluga u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Usluge"""
 class Usluge(models.Model):
 
     @classmethod
@@ -97,7 +109,8 @@ class Usluge(models.Model):
     cena = models.DecimalField(max_digits=10, decimal_places=2)
     opis = models.CharField(max_length=255)
 
-
+"""Klasa Izvestaj se koristi za modelovanje izvestaja u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Izvestaj"""
 class Izvestaj(models.Model):
 
     @classmethod
@@ -111,6 +124,9 @@ class Izvestaj(models.Model):
     dijagnoza = models.TextField(max_length=1000)
     datum = models.DateTimeField(default = datetime.datetime.now())
 
+
+"""Klasa Lekovi se koristi za modelovanje Lekova u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Lekovi"""
 class Lekovi(models.Model):
 
     @classmethod
@@ -120,6 +136,9 @@ class Lekovi(models.Model):
     idL = models.AutoField(primary_key = True)
     opis = models.CharField(max_length=255)
 
+
+"""Klasa Terapija se koristi za modelovanje Tereapije u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Terapija"""
 class Terapija(models.Model):
 
     @classmethod
@@ -130,6 +149,9 @@ class Terapija(models.Model):
     idL = models.ForeignKey(Lekovi, on_delete = models.CASCADE)
     kolicina = models.CharField(max_length=100)
 
+
+"""Klasa Pitanja se koristi za modelovanje Pitanja u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Pitanja"""
 class Pitanja(models.Model):
 
     @classmethod
@@ -141,6 +163,9 @@ class Pitanja(models.Model):
     naslov = models.CharField(max_length=100)
     opis = models.TextField(max_length= 255)
 
+
+"""Klasa Pregledi se koristi za modelovanje Pregleda u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Pregledi"""
 class Pregledi(models.Model):
 
     @classmethod
@@ -154,6 +179,9 @@ class Pregledi(models.Model):
     dv = models.DateTimeField(default = datetime.datetime.now())
     trajanje = models.IntegerField(default=0) #mozda bolje integer
 
+
+"""Klasa Zahpre se koristi za modelovanje zahteva za pregled u bazi podataka,
+funkcija create se koristi za kreiranje objekta klase Zahpre"""
 class Zahpre(models.Model):
 
     idZ = models.AutoField(primary_key = True)
@@ -164,6 +192,7 @@ class Zahpre(models.Model):
     dvdo = models.DateTimeField(default = datetime.datetime.now())
 
 
+"""funkcija create_auth_token se koristi za kreiranje tokena za autentikaciju korisnika"""
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
