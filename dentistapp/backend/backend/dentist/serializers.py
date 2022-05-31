@@ -162,3 +162,9 @@ class PitanjaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pitanja
         fields = ['idP', 'naslov', 'opis', 'email']
+
+class OceneSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ocene
+        fields = ['idO', 'ocena', 'opis']

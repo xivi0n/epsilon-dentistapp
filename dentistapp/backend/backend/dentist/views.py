@@ -456,7 +456,7 @@ class DohvatiKorisnika(APIView):
 
 
 @api_view(['POST',])
-@permission_classes((IsAuthenticated,))
+@permission_classes(())
 def novoPitanje(request):
 
     if request.method == 'POST':
@@ -534,3 +534,32 @@ def odgovoriNaPitanje(request):
         email = EmailMessage(naslov, odgovor, to=[emailTo])
         email.send()
         return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['POST',])
+@permission_classes((IsAuthenticated,))
+def novaOcena(request):
+    try:
+        korisnik = request.user
+    except Korisnik.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "POST":
+        opis = request.data['opis']
+        ocena = request.data['ocena']
+        nova = Ocene(
+            ocena=ocena,
+            opis=opis,
+            idK=korisnik,
+        )
+        nova.save()
+        return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET',])
+@permission_classes(())
+def dohvatiOcene(request):
+
+    if request.method == "GET":
+        ocene = Ocene.objects.all()[0:5]
+        serializer = OceneSerializer(ocene, many=True)
+        return Response(serializer.data)

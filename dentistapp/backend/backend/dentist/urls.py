@@ -26,4 +26,6 @@ urlpatterns = [
     path('pitanja/', dohvatiPitanja, name = 'dohvatiPitanja'),
     path('obrisi-pitanje/', obrisiPitanje, name='obrisiPitanje'),
     path('odgovori/', odgovoriNaPitanje, name='odgovoriNaPitanje'),
+    path('nova-ocena/', novaOcena, name='novaOcena'),
+    path('ocene/', dohvatiOcene, name='dohvatiOcene')
 ]
