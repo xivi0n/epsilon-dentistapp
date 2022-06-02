@@ -22,7 +22,7 @@
                     <h2>Moji pregledi</h2>
                 </div>
                 <div class="col-12 appointments" v-if="appointments.length > 0">
-                    <div class="row" :key="appointment.id" v-for="appointment in appointments">
+                    <div class="row" :key="appointment.idP" v-for="appointment in appointments">
                         <div class="col-12 p-1">
                             <div class="col-12 p-2 cell">
                                 {{appointment.opis}}
@@ -44,9 +44,10 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <router-link to="/" class="router-link">
-                                <button class="btn btn-primary btn-sm w-100 mb-2">Otkaži</button>
+                            <router-link v-if="user.tipK == 'stomatolog'" :to="'/novi-izvestaj/' + appointment.idP" class="router-link">
+                                <button class="btn btn-primary btn-sm w-100 mb-2">Napiši izveštaj</button>
                             </router-link>
+                            <button v-on:click="otkazi(appointment.idP)" class="btn btn-danger btn-sm w-100 mb-2">Otkaži</button>
                         </div>
                     </div>
                 </div>
@@ -70,65 +71,42 @@ export default {
         return {
             user: {
                 logged_in: false,
-                displayName: ""
+                displayName: "",
+                tipK: ""
             },
             appointments: [],
         }
     },
     mounted() {
+        document.title = "Moj profil";
         axios.get("http://localhost:8000/api/v1/moj-profil/", {
         headers: {
             'Authorization': 'Token ' + localStorage.getItem("token")
         }}).then(response => {
             this.user = response.data
+            console.log(this.user)
         }).catch(error => {
             console.log(error)
             this.$router.push({ path: '/404' })
         })
 
-        this.appointments = [
-            {
-                "idP": 1,
-                "opis": "Neki pregled",
-                "dv": "2022-05-21T15:18:05Z",
-                "trajanje": 30
-            },
-            {
-                "idP": 2,
-                "opis": "Neki pregled",
-                "dv": "2022-05-21T15:18:05Z",
-                "trajanje": 30
-            },
-            {
-                "idP": 3,
-                "opis": "Neki pregled",
-                "dv": "2022-05-21T15:18:05Z",
-                "trajanje": 30
-            },
-            {
-                "idP": 4,
-                "opis": "Neki pregled",
-                "dv": "2022-05-21T15:18:05Z",
-                "trajanje": 30
-            },
-            {
-                "idP": 5,
-                "opis": "Neki pregled",
-                "dv": "2022-05-21T15:18:05Z",
-                "trajanje": 30
-            },
-            {
-                "idP": 6,
-                "opis": "Neki pregled",
-                "dv": "2022-05-21T15:18:05Z",
-                "trajanje": 30
-            }
-        ]
+        axios.get("http://localhost:8000/api/v1/moji-pregledi/", {
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem("token")
+        }}).then(response => {
+            console.log(response.data)
+            this.appointments = response.data
+            this.appointments.forEach(e => {
+                e.datum = this.formatDate(new Date(e.dv).toISOString().slice(0,10));
+                e.vreme = new Date(e.dv).toISOString().slice(11,16);
+            });
+        }).catch(error => {
+            console.log(error)
+            // this.$router.push({ path: '/404' })
+        })
+        
 
-        this.appointments.forEach(e => {
-            e.datum = new Date(e.dv).toISOString().slice(0,10);
-            e.vreme = new Date(e.dv).toISOString().slice(11,16);
-        });
+        
         let inputs = document.getElementById("form1").elements
         for (const el of inputs) {
             el.style.fontWeight = "600"
@@ -202,6 +180,24 @@ export default {
             } else {
                 btn.textContent = "Potvrdi"
             }
+        },
+        otkazi(idP) {
+            axios.post("http://localhost:8000/api/v1/otkazi-pregled/", {
+                "idP": idP
+            }, {
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token")
+            }}).then(response => {
+                console.log(response)
+                this.$router.go(0)   
+            }).catch(error => {
+                alert("Proveriti podatke!")
+                console.log(error)
+            })
+        },
+        formatDate(str) {
+            let arr = str.split("-").reverse()
+            return arr.join('.')
         }
     }
 }
@@ -281,6 +277,10 @@ export default {
         border-radius: 10px;
     }
 
+    .btn-danger {
+        border-radius: 10px;
+    }
+
     input {
         padding-top: 0px;
         padding-bottom: 0px;
@@ -300,25 +300,6 @@ export default {
 
     .router-link {
         text-decoration: none;
-    }
-
-    ::-webkit-scrollbar-track {
-        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
-        box-shadow: -4px 4px 25px rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
-        background-color: #F5F5F5;
-    }
-
-    ::-webkit-scrollbar {
-        width: 12px;
-        background-color: #F5F5F5;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3); */
-        box-shadow: -4px 4px 25px rgba(0, 0, 0, 0.25);
-        background-color: #05284B;
     }
 
 </style>
