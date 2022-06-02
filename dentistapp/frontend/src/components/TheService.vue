@@ -1,10 +1,15 @@
 <template>
-    <div class="col-lg-11 col-12 p-1">
+    <div v-if="show_price == false" class="col-12 p-1">
         <div class="col-12 p-2 cell">
             {{service.opis}}
         </div>
     </div>
-    <div class="col-lg-1 col-3 p-1">
+    <div v-if="show_price == true" class="col-lg-11 col-12 p-1">
+        <div class="col-12 p-2 cell">
+            {{service.opis}}
+        </div>
+    </div>
+    <div v-if="show_price == true" class="col-lg-1 col-3 p-1">
             <div class="col-12 p-2 cell price">
             {{service.cena}}
         </div>
@@ -15,7 +20,10 @@
 export default {
     name: 'TheService',
     props: {
-        service: Object
+        service: Object,
+        show_price: {
+            default: true,
+        }
     }
 }
 </script>
