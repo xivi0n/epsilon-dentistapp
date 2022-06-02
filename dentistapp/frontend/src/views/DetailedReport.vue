@@ -15,7 +15,7 @@
                         </form>
 
                         <label>Terapija</label>
-                        <div class="row pt-2 cell justify-content-center">
+                        <div v-if="report.terapija.length > 0" class="row pt-2 cell justify-content-center">
                             <div class="row" :key="med.idL" v-for="med in report.terapija">
                                 <div class="col-8">
                                     <p class="m-auto">{{med.idL.opis}}</p>
@@ -24,6 +24,11 @@
                                     <p class="text-right m-auto">{{med.kolicina}} <i class="fa-solid fa-pen-to-square"></i></p>
                                 </div>
                                 <hr class="">
+                            </div>
+                        </div>
+                        <div v-else class="row cell justify-content-center">
+                            <div class="col-12">
+                                <p class="m-auto">Nema terapije :)</p>
                             </div>
                         </div>
                     </div>
@@ -42,7 +47,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
     name: 'DetailedReport',
@@ -62,50 +67,25 @@ export default {
         }
     },
     mounted() {
-        // axios.get("http://localhost:8000/api/v1/moji-izvestaji/" + this.$route.params.id, {
-        // headers: {
-        //     'Authorization': 'Token ' + localStorage.getItem("token")
-        // }}).then(response => {
-        //     this.report = response.data
-        //     this.report.datum = new Date(this.report.datum).toISOString().slice(0,10);
-        //     console.log(response.data)
-        // }).catch(error => {
-        //     console.log(error)
-        //     // this.$router.push({ path: '/404' })
-        // })
-        this.report = {
-            "vrsta": "Vrsta" + this.$route.params.id,
-            "dijagnoza": "Dijagnoza bolesti \n ima svasta i preporucuje se poseta \nstomatologu u \nnajskorijem mogucem roku",
-            "datum": "2022-05-20T00:46:56Z",
-            "terapija": [
-                {
-                    "idI": 1,
-                    "kolicina": "3x 2",
-                    "idL": {
-                        "idL": 1,
-                        "opis": "Lek1"
-                    }
-                },
-                {
-                    "idI": 1,
-                    "kolicina": "5x 1",
-                    "idL": {
-                        "idL": 1,
-                        "opis": "Lek2"
-                    }
-                },
-                {
-                    "idI": 1,
-                    "kolicina": "2x 3",
-                    "idL": {
-                        "idL": 1,
-                        "opis": "Lek3"
-                    }
-                }
-            ]
-        }
-        this.report.datum = new Date(this.report.datum).toISOString().slice(0,10);
+        document.title = "Detaljan izveštaj"
+        axios.get("http://localhost:8000/api/v1/moji-izvestaji/" + this.$route.params.id, {
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem("token")
+        }}).then(response => {
+            this.report = response.data
+            this.report.datum = this.formatDate(new Date(this.report.datum).toISOString().slice(0,10))
+            console.log(response.data)
+        }).catch(error => {
+            console.log(error)
+            this.$router.push({ path: '/404' })
+        })
         console.log(this.report)
+    },
+    methods: {
+        formatDate(str) {
+            let arr = str.split("-").reverse()
+            return arr.join('.')
+        },
     }
 }
 </script>

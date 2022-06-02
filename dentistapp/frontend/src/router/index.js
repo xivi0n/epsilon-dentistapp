@@ -56,7 +56,7 @@ const routes = [
 		component: () => import(/* webpackChunkName: "about" */ '../views/ManageAppointments.vue')
 	},
 	{
-		path: '/novi-izvestaj',
+		path: '/novi-izvestaj/:id',
 		name: 'NewReport',
 		component: () => import(/* webpackChunkName: "about" */ '../views/NewReport.vue')
 	},
@@ -99,6 +99,11 @@ const routes = [
 		path: '/moji-zahtevi',
 		name: 'MyAllRequests',
 		component: () => import(/* webpackChunkName: "about" */ '../views/MyAllRequests.vue')
+	},
+	{
+		path: '/dodaj-ocenu',
+		name: 'NewReview',
+		component: () => import(/* webpackChunkName: "about" */ '../views/NewReview.vue')
 	}
 ]
 
