@@ -5,11 +5,21 @@
                 <div class="row mb-2">
                     <h2>Moji izveštaji</h2>
                 </div>
-                <div class="col-12 reports">
+                <div v-if="reports.length > 0" class="col-12 reports">
                     <div class="row mx-2" :key="report.idI" v-for="report in reports">
-                        <div class="col-lg-9 col-md-8 col-12 p-1">
+                        <div class="col-lg-7 col-md-5 col-12 p-1">
                             <div class="p-2 cell">
                                 <p class="m-auto vrsta">{{report.vrsta}}</p>
+                            </div>
+                        </div>
+                        <div v-if="tipK == 'stomatolog'" class="col-lg-2 col-md-3 col-8 p-1">
+                            <div class="p-2 cell text-center">
+                                <p class="m-auto vrsta">{{report.matbroj}}</p>
+                            </div>
+                        </div>
+                        <div v-if="tipK == 'pacijent'" class="col-lg-2 col-md-3 col-8 p-1">
+                            <div class="p-2 cell text-center">
+                                <p class="m-auto vrsta">{{report.ime}} {{report.prezime}}</p>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 col-4 p-1">
@@ -22,6 +32,11 @@
                                 <button class="btn btn-primary text-center mb-2">Prikaži</button>
                             </router-link>
                         </div>
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="col-12 text-center my-3">
+                        <h3>Nemate korisničkih pitanja!</h3>
                     </div>
                 </div>
             </div>
@@ -40,55 +55,31 @@ export default {
     data() {
         return {
             reports: [],
+            tipK: ""
         }
     },
     mounted() {
+        document.title = "Svi moji izveštaji"
+        this.tipK = localStorage.getItem("tipK")
         axios.get("http://localhost:8000/api/v1/moji-izvestaji/", {
         headers: {
             'Authorization': 'Token ' + localStorage.getItem("token")
         }}).then(response => {
             this.reports = response.data
             this.reports.forEach(e => {
-                e.datum = new Date(e.datum).toISOString().slice(0,10);
+                e.datum = this.formatDate(new Date(e.datum).toISOString().slice(0,10))
             });
             console.log(response.data)
         }).catch(error => {
             console.log(error)
             this.$router.push({ path: '/404' })
         })
-
-        // this.reports = [
-        //                 {
-        //         idI: 1,
-        //         vrsta: "Naslov izvestaja",
-        //         datum: "12.1.2022."
-        //     },
-        //     {
-        //         idI: 2,
-        //         vrsta: "Naslov izvestaja",
-        //         datum: "12.1.2022."
-        //     },
-        //     {
-        //         idI: 3,
-        //         vrsta: "Naslov izvestaja",
-        //         datum: "12.1.2022."
-        //     },
-        //     {
-        //         idI: 4,
-        //         vrsta: "Naslov izvestaja",
-        //         datum: "12.1.2022."
-        //     },
-        //     {
-        //         idI: 5,
-        //         vrsta: "Naslov izvestaja",
-        //         datum: "12.1.2022."
-        //     },
-        //     {
-        //         idI: 6,
-        //         vrsta: "Naslov izvestaja",
-        //         datum: "12.1.2022."
-        //     }
-        // ]
+    },
+    methods: {
+        formatDate(str) {
+            let arr = str.split("-").reverse()
+            return arr.join('.')
+        }
     }
 };
 </script>
