@@ -22,7 +22,7 @@
                         <router-link to="/korisnicka-podrska" class="nav-link router-link px-2">Korisnička podrška</router-link>
                     </li>
                     <li class="nav-item" v-if="user.logged_in == true">
-                        <router-link to="/zakazi-pregled" class="nav-link router-link px-2">Zakaži pregled</router-link>
+                        <router-link v-if="user.tipK == 'pacijent'" to="/zakazi-pregled" class="nav-link router-link px-2">Zakaži pregled</router-link>
                     </li>
                 </ul>
                 <div v-if="user.logged_in != true" class="">
@@ -69,7 +69,9 @@ export default {
         return {
             user: {
                 logged_in: (localStorage.getItem("logged_in") === 'true'),
-                displayName: localStorage.getItem("displayName")
+                displayName: localStorage.getItem("displayName"),
+                tipK: localStorage.getItem("tipK"),
+                email: localStorage.getItem("email")
             }
         }
     },
@@ -105,7 +107,9 @@ export default {
         odjavi() {
             this.user = {
                 logged_in: false,
-                displayName: ""
+                displayName: "",
+                tipK: "",
+                email: ""
             }
             axios.get("http://localhost:8000/api/v1/logout/", {
             headers: {
@@ -114,7 +118,10 @@ export default {
                 localStorage.setItem("token", "")
                 localStorage.setItem("displayName", "")
                 localStorage.setItem("logged_in", false)
+                localStorage.setItem("tipK", "")
+                localStorage.setItem("email", "")
                 console.log(response)
+                this.$router.go(0)
             }).catch(error => {
                 console.log(error)
                 this.$router.push({ path: '/404' })
@@ -177,7 +184,7 @@ export default {
         border: 2px solid #05284B;
         border-radius: 30px;
         color: #05284B;
-        font-weight: 600    ;
+        font-weight: 600;
     }
 
     .dropdown-item {

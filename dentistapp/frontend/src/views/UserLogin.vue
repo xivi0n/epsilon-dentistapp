@@ -13,9 +13,9 @@
                         <input type="password" id="password" class="form-control form-control-md cell" placeholder="********"/>
                     </div>
                     <p class="mt-2 mb-4">
-                        <router-link to="/" class="forgot-password">Zaboravljena lozinka ?</router-link>
+                        <!-- <router-link to="/" class="forgot-password">Zaboravljena lozinka ?</router-link> -->
                     </p>
-                    <button type="button" v-on:click="login()" class="btn btn-primary w-100">Prijavi se</button>
+                    <button id="submit-btn" type="button" v-on:click="login()" class="btn btn-primary w-100">Prijavi se</button>
                 </form>
             </div>
         </div>
@@ -29,6 +29,16 @@ import axios from 'axios'
 export default {
     name: "UserLogin",
     components: {
+    },
+    mounted() {
+        document.title = "Prijavljivanje"
+        document.getElementById("password")
+        .addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("submit-btn").click();
+        }
+        });
     },
     methods: {
         login() {
@@ -44,13 +54,18 @@ export default {
                 }}).then(response => {
                     let user = {
                         logged_in: true,
-                        displayName: ""
+                        displayName: "",
+                        tipK: "",
+                        email: ""
                     }
                     user.displayName = response.data["ime"] + " " + response.data["prezime"]
+                    user.tipK = response.data["tipK"]
+                    user.email = response.data["email"]
 
                     localStorage.setItem("displayName", user.displayName)
                     localStorage.setItem("logged_in", user.logged_in)
                     localStorage.setItem("tipK", response.data.tipK)
+                    localStorage.setItem("email", response.data.email)
 
                     this.emitter.emit("login-changed", user)
                     this.$router.push({ path: '/moj-profil' })
@@ -66,7 +81,8 @@ export default {
 
                 this.emitter.emit('login-changed', {
                     logged_in: false,
-                    displayName: ""
+                    displayName: "",
+                    tipK: ""
                 });
             })
         },  

@@ -66,6 +66,7 @@ export default {
     components: {
     },
     mounted() {
+        document.title = "Registracija"
     },
     methods: {
         register() {
@@ -86,8 +87,16 @@ export default {
                 console.log(response);
                 if (response.data["email"][0] == "korisnik with this email already exists.")
                     alert("Postoji korisnik sa zadatom email adresom")
-                else
-                    this.$router.push({ path: '/' })
+                else {
+                    let inputs = document.getElementsByTagName("input")
+                    for (const input of inputs) {
+                        input.value = ""
+                    }
+                    this.$router.push({ path: '/' })   
+                }
+            }).catch(error => {
+                alert("Proveriti podatke!")
+                console.log(error)
             })
         }
     }
