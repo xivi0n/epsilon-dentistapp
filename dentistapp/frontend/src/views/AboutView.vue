@@ -10,17 +10,14 @@
 				<div class="row p-2">
 					<div class="col-md-8 col-12 about">
 						<p class="about-text">
-							Ovde mozete naci nase podatke, gde se nalazimo
+							Stomatološka ordinacija DentistApp otvorena je 2022.god. 
 							<br><br>
-							Contrary to popular belief, Lorem Ipsum is not simply random text. 
-							It has roots in a piece of classical Latin literature from 45 BC,
-							making it over 2000 years old. Richard McClintock, a 
-							Latin professor at Hampden-Sydney College in Virginia
+							Naš tim čine specijalisti sa dugogodišnjim iskustvom, koji Vam mogu pružiti usluge iz svih oblasti 
+							stomatologije. Raspolažemo savremenom opremom i najnovijim materijalima. 
 							<br><br>
-							Ovde mozete naci nase podatke, gde se nalazimo
-							<br><br>
-							McClintock, a 
-							Latin professor at Hampden-Sydney College in Virginia
+							Posebno se ističemo u oblasti implantologije, i u saradnji sa našim partnerima OFTAL C, 
+							koji su ekskluzivni distributeri stomatološkog materijala američke kompanije ZIMMER BIOMET DENTAL u 
+							mogućnosti smo da našim pacijentima ponudimo PREMIUM IMPLANTATE.
 						</p>
 					</div>
 				</div>
@@ -51,6 +48,7 @@ export default {
 	components: {
 	},
 	mounted() {
+		document.title = "O nama"
 		var map = L.map('map').setView([44.8057, 20.4763], 16.5);
 		L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 			attribution: '',
