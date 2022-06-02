@@ -16,6 +16,7 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 from django.core.mail import EmailMessage
 import json
+import random
 
 # Nikola Krstic 0273/19
 # Anja Jevtovic 0281/19
@@ -624,7 +625,7 @@ def dohvatiOcene(request):
     if request.method == "GET":
         data = {}
         returnData = []
-        ocene = Ocene.objects.all()[0:5]
+        ocene = random.sample(list(Ocene.objects.all()), 5)
         for o in ocene:
             idK = o.idK
             info = Informacije.objects.get(idK=idK)
