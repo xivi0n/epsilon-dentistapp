@@ -78,6 +78,7 @@ export default {
                 localStorage.setItem("token", "")
                 localStorage.setItem("displayName", "")
                 localStorage.setItem("logged_in", false)
+                alert("Proveriti podatke!")
 
                 this.emitter.emit('login-changed', {
                     logged_in: false,

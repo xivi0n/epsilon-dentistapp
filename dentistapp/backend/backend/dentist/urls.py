@@ -6,7 +6,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 #Anja Jevtovic 0281/19
 
 urlpatterns = [
-    path('sve-usluge/', SveUsluge.as_view()),
+    path('sve-usluge/', SveUsluge.as_view(), name='sveUsluge'),
     path('registracija/', registracija, name = 'registracija'),
     path('login/', obtain_auth_token, name = "login"),
     path('moj-profil/', mojProfilView, name = 'mojProfil'),

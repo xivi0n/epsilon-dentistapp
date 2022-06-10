@@ -33,7 +33,7 @@ class SveUsluge(APIView):
     def get(self, request, format=None):
         usluge = Usluge.objects.all()
         serializer = UslugeSerializer(usluge, many = True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
@@ -317,7 +317,7 @@ def posaljiZahtev(request):
     try:
         korisnik = request.user
     except Korisnik.DoesNotExist:
-        return Response(stauts=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     try:
         stomatolog = Korisnik.objects.get(id=request.data['idS'])
